@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Template</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Interactive Template Page</h1>
+        <button id="openModal">Open Modal</button>
+    </header>
+
+    <main>
+        <section class="intro">
+            <h2>Introduction</h2>
+            <p>This is a simple HTML/CSS template with TypeScript-driven interactivity.</p>
+        </section>
+
+        <section class="content">
+            <h2>Content Section</h2>
+            <p>Here you can add your main content.</p>
+            <div id="posts"></div>
+        </section>
+    </main>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="close">&times;</span>
+            <p>This is a modal window!</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Your Company</p>
+    </footer>
+
+    <!-- Підключаємо скомпільований JS файл -->
+    <script src="app.js"></script>
+</body>
+</html>
