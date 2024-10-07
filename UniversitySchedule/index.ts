@@ -327,7 +327,7 @@ function populateLessonSelects() {
   const lessonProfessorSelect = document.getElementById('lessonProfessor') as HTMLSelectElement;
   const lessonClassroomSelect = document.getElementById('lessonClassroom') as HTMLSelectElement;
 
-  // Очистити існуючі опції
+  // Очистити існуючі опції та додати загальні запрошення
   lessonCourseSelect.innerHTML = '<option value="" disabled selected>Виберіть курс</option>';
   lessonProfessorSelect.innerHTML = '<option value="" disabled selected>Виберіть професора</option>';
   lessonClassroomSelect.innerHTML = '<option value="" disabled selected>Виберіть аудиторію</option>';
@@ -617,4 +617,8 @@ function initializeSampleData() {
 // Виклик функції ініціалізації при завантаженні сторінки
 window.onload = function() {
   initializeSampleData();
+  
+  // Додамо функції до window для доступу з HTML атрибутів onclick
+  (window as any).deleteLesson = deleteLesson;
+  (window as any).changeClassroom = changeClassroom;
 };
