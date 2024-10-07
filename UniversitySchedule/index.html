@@ -1,0 +1,146 @@
+<!DOCTYPE html> 
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Система Управління Розкладом в Університеті</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>Система Управління Розкладом в Університеті</h1>
+
+    <!-- Додавання Професора -->
+    <h2>Додати Професора</h2>
+    <form id="addProfessorForm">
+        <label for="professorId">ID Професора:</label>
+        <input type="number" id="professorId" required>
+
+        <label for="professorName">Ім'я Професора:</label>
+        <input type="text" id="professorName" required>
+
+        <label for="professorDept">Кафедра:</label>
+        <input type="text" id="professorDept" required>
+
+        <button type="submit">Додати Професора</button>
+        <div id="addProfessorMessage"></div>
+    </form>
+
+    <!-- Додавання Аудиторії -->
+    <h2>Додати Аудиторію</h2>
+    <form id="addClassroomForm">
+        <label for="classroomNumber">Номер Аудиторії:</label>
+        <input type="text" id="classroomNumber" required>
+
+        <label for="classroomCapacity">Місткість:</label>
+        <input type="number" id="classroomCapacity" required>
+
+        <label for="classroomProjector">Має Проектор:</label>
+        <select id="classroomProjector" required>
+            <option value="true">Так</option>
+            <option value="false">Ні</option>
+        </select>
+
+        <button type="submit">Додати Аудиторію</button>
+        <div id="addClassroomMessage"></div>
+    </form>
+
+    <!-- Додавання Курсу -->
+    <h2>Додати Курс</h2>
+    <form id="addCourseForm">
+        <label for="courseId">ID Курсу:</label>
+        <input type="number" id="courseId" required>
+
+        <label for="courseName">Назва Курсу:</label>
+        <input type="text" id="courseName" required>
+
+        <label for="courseType">Тип Курсу:</label>
+        <select id="courseType" required>
+            <option value="Lecture">Лекція</option>
+            <option value="Seminar">Семінар</option>
+            <option value="Lab">Лабораторія</option>
+            <option value="Practice">Практика</option>
+        </select>
+
+        <button type="submit">Додати Курс</button>
+        <div id="addCourseMessage"></div>
+    </form>
+
+    <!-- Додавання Заняття -->
+    <h2>Додати Заняття</h2>
+    <form id="addLessonForm">
+        <label for="lessonId">ID Заняття:</label>
+        <input type="number" id="lessonId" required>
+
+        <label for="lessonCourse">Курс:</label>
+        <select id="lessonCourse" required></select>
+
+        <label for="lessonProfessor">Професор:</label>
+        <select id="lessonProfessor" required></select>
+
+        <label for="lessonClassroom">Аудиторія:</label>
+        <select id="lessonClassroom" required></select>
+
+        <label for="lessonDay">День Тижня:</label>
+        <select id="lessonDay" required>
+            <option value="Monday">Понеділок</option>
+            <option value="Tuesday">Вівторок</option>
+            <option value="Wednesday">Середа</option>
+            <option value="Thursday">Четвер</option>
+            <option value="Friday">П'ятниця</option>
+        </select>
+
+        <label for="lessonTime">Час:</label>
+        <select id="lessonTime" required>
+            <option value="8:30-10:00">8:30-10:00</option>
+            <option value="10:15-11:45">10:15-11:45</option>
+            <option value="12:15-13:45">12:15-13:45</option>
+            <option value="14:00-15:30">14:00-15:30</option>
+            <option value="15:45-17:15">15:45-17:15</option>
+        </select>
+
+        <button type="submit">Додати Заняття</button>
+        <div id="addLessonMessage"></div>
+    </form>
+
+    <!-- Відображення Розкладу -->
+    <h2>Розклад Занять</h2>
+    <table id="scheduleTable">
+        <thead>
+            <tr>
+                <th>ID Заняття</th>
+                <th>Курс</th>
+                <th>Професор</th>
+                <th>Аудиторія</th>
+                <th>День</th>
+                <th>Час</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Розклад буде тут -->
+        </tbody>
+    </table>
+
+    <!-- Звіти та Аналіз -->
+    <h2>Звіти та Аналіз</h2>
+    <div>
+        <h3>Відсоток Використання Аудиторії</h3>
+        <form id="utilizationForm">
+            <label for="utilizationClassroom">Аудиторія:</label>
+            <select id="utilizationClassroom" required></select>
+            <button type="submit">Отримати Використання</button>
+        </form>
+        <div id="utilizationResult"></div>
+    </div>
+
+    <div>
+        <h3>Найпопулярніший Тип Занять</h3>
+        <button id="popularCourseTypeBtn">Визначити</button>
+        <div id="popularCourseTypeResult"></div>
+    </div>
+
+    <!-- Підключення скомпільованого JavaScript -->
+    <script src="dist/index.js"></script>
+
+</body>
+</html>
