@@ -14,18 +14,32 @@ let schedule = [];
 function addProfessor(professor) {
     // Перевірка на унікальність id
     if (professors.some(p => p.id === professor.id)) {
-        console.error(`Professor with id ${professor.id} already exists.`);
-        return;
+        throw new Error(`Професор з ID ${professor.id} вже існує.`);
     }
     professors.push(professor);
 }
-// c) Функція для додавання заняття до розкладу, якщо немає конфліктів
+// c) Функція для додавання аудиторії
+function addClassroom(classroom) {
+    // Перевірка на унікальність номера аудиторії
+    if (classrooms.some(c => c.number === classroom.number)) {
+        throw new Error(`Аудиторія з номером ${classroom.number} вже існує.`);
+    }
+    classrooms.push(classroom);
+}
+// d) Функція для додавання курсу
+function addCourse(course) {
+    // Перевірка на унікальність id курсу
+    if (courses.some(c => c.id === course.id)) {
+        throw new Error(`Курс з ID ${course.id} вже існує.`);
+    }
+    courses.push(course);
+}
+// e) Функція для додавання заняття до розкладу, якщо немає конфліктів
 function addLesson(lesson) {
     // Перевірка на конфлікти
     const conflict = validateLesson(lesson);
     if (conflict) {
-        console.error(`Cannot add lesson due to conflict: ${conflict.type}`);
-        return false;
+        throw new Error(`Неможливо додати заняття через конфлікт: ${conflict.type}`);
     }
     schedule.push(lesson);
     return true;
@@ -78,7 +92,7 @@ function validateLesson(lesson) {
 // ===============================================
 // a) Функція для отримання відсотка використання аудиторії
 function getClassroomUtilization(classroomNumber) {
-    const totalSlots = 5 /* days */ * 5 /* time slots per day */; // Припускаємо 5 днів та 5 слотів на день
+    const totalSlots = 5 /* днів */ * 5 /* слотів на день */; // Припускаємо 5 днів та 5 слотів на день
     const usedSlots = schedule.filter(lesson => lesson.classroomNumber === classroomNumber).length;
     return (usedSlots / totalSlots) * 100;
 }
@@ -112,8 +126,7 @@ function getMostPopularCourseType() {
 function reassignClassroom(lessonId, newClassroomNumber) {
     const lessonIndex = schedule.findIndex(lesson => lesson.id === lessonId);
     if (lessonIndex === -1) {
-        console.error(`Lesson with id ${lessonId} not found.`);
-        return false;
+        throw new Error(`Заняття з ID ${lessonId} не знайдено.`);
     }
     const lesson = schedule[lessonIndex];
     // Створюємо новий об'єкт заняття з новою аудиторією
@@ -121,8 +134,7 @@ function reassignClassroom(lessonId, newClassroomNumber) {
     // Перевірка на конфлікти
     const conflict = validateLesson(updatedLesson);
     if (conflict) {
-        console.error(`Cannot reassign classroom due to conflict: ${conflict.type}`);
-        return false;
+        throw new Error(`Неможливо змінити аудиторію через конфлікт: ${conflict.type}`);
     }
     // Оновлюємо розклад
     schedule[lessonIndex] = updatedLesson;
@@ -132,67 +144,345 @@ function reassignClassroom(lessonId, newClassroomNumber) {
 function cancelLesson(lessonId) {
     const lessonIndex = schedule.findIndex(lesson => lesson.id === lessonId);
     if (lessonIndex === -1) {
-        console.error(`Lesson with id ${lessonId} not found.`);
-        return;
+        throw new Error(`Заняття з ID ${lessonId} не знайдено.`);
     }
     schedule.splice(lessonIndex, 1);
-    console.log(`Lesson with id ${lessonId} has been canceled.`);
+    console.log(`Заняття з ID ${lessonId} було видалено.`);
 }
 // ===============================================
-// 8. Приклад використання системи
+// 8. Робота з DOM елементами та UI
 // ===============================================
-// Додавання деяких даних для демонстрації
-addProfessor({ id: 1, name: "Dr. Ivanov", department: "Computer Science" });
-addProfessor({ id: 2, name: "Prof. Petrova", department: "Mathematics" });
-classrooms.push({ number: "101A", capacity: 30, hasProjector: true });
-classrooms.push({ number: "202B", capacity: 50, hasProjector: false });
-courses.push({ id: 1, name: "Algorithms", type: "Lecture" });
-courses.push({ id: 2, name: "Calculus", type: "Seminar" });
-// Додавання заняття
-const newLesson = {
-    id: 1,
-    courseId: 1,
-    professorId: 1,
-    classroomNumber: "101A",
-    dayOfWeek: "Monday",
-    timeSlot: "8:30-10:00"
+// Форма додавання професора
+const addProfessorForm = document.getElementById('addProfessorForm');
+const addProfessorMessage = document.getElementById('addProfessorMessage');
+// Форма додавання аудиторії
+const addClassroomForm = document.getElementById('addClassroomForm');
+const addClassroomMessage = document.getElementById('addClassroomMessage');
+// Форма додавання курсу
+const addCourseForm = document.getElementById('addCourseForm');
+const addCourseMessage = document.getElementById('addCourseMessage');
+// Форма додавання заняття
+const addLessonForm = document.getElementById('addLessonForm');
+const addLessonMessage = document.getElementById('addLessonMessage');
+// Таблиця розкладу
+const scheduleTableBody = document.querySelector('#scheduleTable tbody');
+// Форма для отримання використання аудиторії
+const utilizationForm = document.getElementById('utilizationForm');
+const utilizationResult = document.getElementById('utilizationResult');
+const utilizationClassroomSelect = document.getElementById('utilizationClassroom');
+// Кнопка для визначення найпопулярнішого типу курсу
+const popularCourseTypeBtn = document.getElementById('popularCourseTypeBtn');
+const popularCourseTypeResult = document.getElementById('popularCourseTypeResult');
+// ===============================================
+// 9. Функції для роботи з UI
+// ===============================================
+/**
+ * Оновлює таблицю розкладу
+ */
+function updateScheduleTable() {
+    // Очистити таблицю
+    scheduleTableBody.innerHTML = '';
+    // Додати кожне заняття
+    schedule.forEach(lesson => {
+        const course = courses.find(c => c.id === lesson.courseId);
+        const professor = professors.find(p => p.id === lesson.professorId);
+        const row = document.createElement('tr');
+        row.innerHTML = `
+      <td>${lesson.id}</td>
+      <td>${course ? course.name : 'Не знайдено'}</td>
+      <td>${professor ? professor.name : 'Не знайдено'}</td>
+      <td>${lesson.classroomNumber}</td>
+      <td>${lesson.dayOfWeek}</td>
+      <td>${lesson.timeSlot}</td>
+      <td>
+        <button onclick="deleteLesson(${lesson.id})">Видалити</button>
+        <button onclick="changeClassroom(${lesson.id})">Змінити Аудиторію</button>
+      </td>
+    `;
+        scheduleTableBody.appendChild(row);
+    });
+    // Оновити селекти для розкладу
+    populateLessonSelects();
+    populateUtilizationSelect();
+}
+/**
+ * Оновлює списки в селектах для додавання заняття
+ */
+function populateLessonSelects() {
+    const lessonCourseSelect = document.getElementById('lessonCourse');
+    const lessonProfessorSelect = document.getElementById('lessonProfessor');
+    const lessonClassroomSelect = document.getElementById('lessonClassroom');
+    // Очистити існуючі опції
+    lessonCourseSelect.innerHTML = '<option value="" disabled selected>Виберіть курс</option>';
+    lessonProfessorSelect.innerHTML = '<option value="" disabled selected>Виберіть професора</option>';
+    lessonClassroomSelect.innerHTML = '<option value="" disabled selected>Виберіть аудиторію</option>';
+    // Додати опції курсів
+    courses.forEach(course => {
+        const option = document.createElement('option');
+        option.value = course.id.toString();
+        option.textContent = `${course.name} (${course.type})`;
+        lessonCourseSelect.appendChild(option);
+    });
+    // Додати опції професорів
+    professors.forEach(prof => {
+        const option = document.createElement('option');
+        option.value = prof.id.toString();
+        option.textContent = `${prof.name} (${prof.department})`;
+        lessonProfessorSelect.appendChild(option);
+    });
+    // Додати опції аудиторій
+    classrooms.forEach(classroom => {
+        const option = document.createElement('option');
+        option.value = classroom.number;
+        option.textContent = `${classroom.number} (Вмісткість: ${classroom.capacity})`;
+        lessonClassroomSelect.appendChild(option);
+    });
+}
+/**
+ * Оновлює селект для використання аудиторії
+ */
+function populateUtilizationSelect() {
+    utilizationClassroomSelect.innerHTML = '<option value="" disabled selected>Виберіть аудиторію</option>';
+    classrooms.forEach(classroom => {
+        const option = document.createElement('option');
+        option.value = classroom.number;
+        option.textContent = `${classroom.number}`;
+        utilizationClassroomSelect.appendChild(option);
+    });
+}
+/**
+ * Видаляє заняття з розкладу
+ * @param {number} lessonId
+ */
+function deleteLesson(lessonId) {
+    if (confirm(`Ви впевнені, що хочете видалити заняття з ID ${lessonId}?`)) {
+        try {
+            cancelLesson(lessonId);
+            updateScheduleTable();
+            alert('Заняття видалено успішно.');
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                alert(error.message);
+            }
+            else {
+                alert('Сталася невідома помилка.');
+            }
+        }
+    }
+}
+/**
+ * Змінює аудиторію для заняття
+ * @param {number} lessonId
+ */
+function changeClassroom(lessonId) {
+    const newClassroomNumber = prompt('Введіть новий номер аудиторії:');
+    if (newClassroomNumber) {
+        try {
+            reassignClassroom(lessonId, newClassroomNumber.trim());
+            updateScheduleTable();
+            alert('Аудиторію змінено успішно.');
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                alert(error.message);
+            }
+            else {
+                alert('Сталася невідома помилка.');
+            }
+        }
+    }
+}
+// ===============================================
+// 10. Обробка подій форм
+// ===============================================
+// Обробка додавання професора
+addProfessorForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const idInput = document.getElementById('professorId');
+    const nameInput = document.getElementById('professorName');
+    const deptInput = document.getElementById('professorDept');
+    const id = parseInt(idInput.value);
+    const name = nameInput.value.trim();
+    const department = deptInput.value.trim();
+    try {
+        addProfessor({ id, name, department });
+        addProfessorMessage.textContent = 'Професора додано успішно.';
+        addProfessorMessage.className = 'success';
+        addProfessorForm.reset();
+        updateScheduleTable();
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            addProfessorMessage.textContent = error.message;
+        }
+        else {
+            addProfessorMessage.textContent = 'Сталася невідома помилка.';
+        }
+        addProfessorMessage.className = 'error';
+    }
+});
+// Обробка додавання аудиторії
+addClassroomForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const numberInput = document.getElementById('classroomNumber');
+    const capacityInput = document.getElementById('classroomCapacity');
+    const projectorSelect = document.getElementById('classroomProjector');
+    const number = numberInput.value.trim();
+    const capacity = parseInt(capacityInput.value);
+    const hasProjector = projectorSelect.value === 'true';
+    try {
+        addClassroom({ number, capacity, hasProjector });
+        addClassroomMessage.textContent = 'Аудиторію додано успішно.';
+        addClassroomMessage.className = 'success';
+        addClassroomForm.reset();
+        updateScheduleTable();
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            addClassroomMessage.textContent = error.message;
+        }
+        else {
+            addClassroomMessage.textContent = 'Сталася невідома помилка.';
+        }
+        addClassroomMessage.className = 'error';
+    }
+});
+// Обробка додавання курсу
+addCourseForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const idInput = document.getElementById('courseId');
+    const nameInput = document.getElementById('courseName');
+    const typeSelect = document.getElementById('courseType');
+    const id = parseInt(idInput.value);
+    const name = nameInput.value.trim();
+    const type = typeSelect.value;
+    try {
+        addCourse({ id, name, type });
+        addCourseMessage.textContent = 'Курс додано успішно.';
+        addCourseMessage.className = 'success';
+        addCourseForm.reset();
+        updateScheduleTable();
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            addCourseMessage.textContent = error.message;
+        }
+        else {
+            addCourseMessage.textContent = 'Сталася невідома помилка.';
+        }
+        addCourseMessage.className = 'error';
+    }
+});
+// Обробка додавання заняття
+addLessonForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const idInput = document.getElementById('lessonId');
+    const courseSelect = document.getElementById('lessonCourse');
+    const professorSelect = document.getElementById('lessonProfessor');
+    const classroomSelect = document.getElementById('lessonClassroom');
+    const daySelect = document.getElementById('lessonDay');
+    const timeSelect = document.getElementById('lessonTime');
+    const id = parseInt(idInput.value);
+    const courseId = parseInt(courseSelect.value);
+    const professorId = parseInt(professorSelect.value);
+    const classroomNumber = classroomSelect.value;
+    const dayOfWeek = daySelect.value;
+    const timeSlot = timeSelect.value;
+    try {
+        addLesson({ id, courseId, professorId, classroomNumber, dayOfWeek, timeSlot });
+        addLessonMessage.textContent = 'Заняття додано успішно.';
+        addLessonMessage.className = 'success';
+        addLessonForm.reset();
+        updateScheduleTable();
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            addLessonMessage.textContent = error.message;
+        }
+        else {
+            addLessonMessage.textContent = 'Сталася невідома помилка.';
+        }
+        addLessonMessage.className = 'error';
+    }
+});
+// Обробка отримання використання аудиторії
+utilizationForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const classroomNumber = utilizationClassroomSelect.value;
+    const utilization = getClassroomUtilization(classroomNumber);
+    utilizationResult.textContent = `Відсоток використання аудиторії ${classroomNumber}: ${utilization.toFixed(2)}%`;
+});
+// Обробка визначення найпопулярнішого типу курсу
+popularCourseTypeBtn.addEventListener('click', function () {
+    const popularType = getMostPopularCourseType();
+    if (popularType) {
+        popularCourseTypeResult.textContent = `Найпопулярніший тип курсу: ${popularType}`;
+    }
+    else {
+        popularCourseTypeResult.textContent = 'Немає даних для визначення.';
+    }
+});
+// ===============================================
+// 11. Ініціалізація та приклади даних
+// ===============================================
+function initializeSampleData() {
+    try {
+        // Додавання професорів
+        addProfessor({ id: 1, name: "Dr. Іванов", department: "Комп'ютерні науки" });
+        addProfessor({ id: 2, name: "Prof. Петрова", department: "Математика" });
+        addProfessor({ id: 3, name: "Dr. Сидоренко", department: "Інформаційні технології" });
+        addProfessor({ id: 4, name: "Prof. Коваль", department: "Комп'ютерна інженерія" });
+        // Додавання аудиторій
+        addClassroom({ number: "101A", capacity: 30, hasProjector: true });
+        addClassroom({ number: "202B", capacity: 50, hasProjector: false });
+        addClassroom({ number: "303C", capacity: 40, hasProjector: true });
+        addClassroom({ number: "404D", capacity: 35, hasProjector: false });
+        // Додавання курсів
+        addCourse({ id: 1, name: "Алгоритми та структури даних", type: "Lecture" });
+        addCourse({ id: 2, name: "Об'єктно-орієнтоване програмування", type: "Seminar" });
+        addCourse({ id: 3, name: "Бази даних", type: "Lab" });
+        addCourse({ id: 4, name: "Мережеві технології", type: "Practice" });
+        // Додавання занять
+        addLesson({
+            id: 1,
+            courseId: 1,
+            professorId: 1,
+            classroomNumber: "101A",
+            dayOfWeek: "Monday",
+            timeSlot: "8:30-10:00"
+        });
+        addLesson({
+            id: 2,
+            courseId: 2,
+            professorId: 2,
+            classroomNumber: "202B",
+            dayOfWeek: "Tuesday",
+            timeSlot: "10:15-11:45"
+        });
+        addLesson({
+            id: 3,
+            courseId: 3,
+            professorId: 3,
+            classroomNumber: "303C",
+            dayOfWeek: "Wednesday",
+            timeSlot: "12:15-13:45"
+        });
+        addLesson({
+            id: 4,
+            courseId: 4,
+            professorId: 4,
+            classroomNumber: "404D",
+            dayOfWeek: "Thursday",
+            timeSlot: "14:00-15:30"
+        });
+        updateScheduleTable();
+    }
+    catch (error) {
+        console.error("Помилка ініціалізації даних:", error instanceof Error ? error.message : 'Невідома помилка');
+    }
+}
+// Виклик функції ініціалізації при завантаженні сторінки
+window.onload = function () {
+    initializeSampleData();
 };
-if (addLesson(newLesson)) {
-    console.log("Lesson added successfully.");
-}
-else {
-    console.log("Failed to add lesson.");
-}
-// Спроба додати конфліктне заняття
-const conflictingLesson = {
-    id: 2,
-    courseId: 2,
-    professorId: 1, // Той же професор
-    classroomNumber: "202B",
-    dayOfWeek: "Monday",
-    timeSlot: "8:30-10:00" // Той же час
-};
-if (addLesson(conflictingLesson)) {
-    console.log("Conflicting lesson added successfully.");
-}
-else {
-    console.log("Failed to add conflicting lesson.");
-}
-// Перевірка розкладу професора
-const scheduleProfessor1 = getProfessorSchedule(1);
-console.log("Schedule for Professor 1:", scheduleProfessor1);
-// Знаходження вільних аудиторій
-const availableClassrooms = findAvailableClassrooms("8:30-10:00", "Monday");
-console.log("Available Classrooms on Monday 8:30-10:00:", availableClassrooms);
-// Аналіз використання аудиторій
-const utilization101A = getClassroomUtilization("101A");
-console.log("Utilization of Classroom 101A:", utilization101A + "%");
-// Визначення найпопулярнішого типу занять
-const popularCourseType = getMostPopularCourseType();
-console.log("Most Popular Course Type:", popularCourseType);
-// Зміна аудиторії для заняття
-const reassigned = reassignClassroom(1, "202B");
-console.log(`Reassign Classroom Result: ${reassigned}`);
-// Видалення заняття
-cancelLesson(1);
-console.log("Updated Schedule:", schedule);
