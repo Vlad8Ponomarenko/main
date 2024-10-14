@@ -1,10 +1,10 @@
-// ===============================================
-// Розробка системи управління розкладом в університеті
-// ===============================================
 
-// ===============================================
+// Розробка системи управління розкладом в університеті
+
+
+
 // 1. Визначення базових типів
-// ===============================================
+
 
 // a) DayOfWeek - дні тижня
 type DayOfWeek = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday";
@@ -20,9 +20,9 @@ type TimeSlot =
 // c) CourseType - типи занять
 type CourseType = "Lecture" | "Seminar" | "Lab" | "Practice";
 
-// ===============================================
+
 // 2. Створення основних структур
-// ===============================================
+
 
 // a) Professor - інформація про професора
 type Professor = {
@@ -55,9 +55,9 @@ type Lesson = {
   timeSlot: TimeSlot;
 };
 
-// ===============================================
+
 // 3. Робота з масивами даних
-// ===============================================
+
 
 // a) Створення масивів даних
 let professors: Professor[] = [];
@@ -103,9 +103,9 @@ function addLesson(lesson: Lesson): boolean {
   return true;
 }
 
-// ===============================================
+
 // 4. Функції пошуку та фільтрації
-// ===============================================
+
 
 // a) Функція для знаходження вільних аудиторій у вказаний час
 function findAvailableClassrooms(timeSlot: TimeSlot, dayOfWeek: DayOfWeek): string[] {
@@ -128,9 +128,9 @@ function getProfessorSchedule(professorId: number): Lesson[] {
   return schedule.filter(lesson => lesson.professorId === professorId);
 }
 
-// ===============================================
+
 // 5. Обробка конфліктів та валідація
-// ===============================================
+
 
 // a) ScheduleConflict - тип конфлікту
 type ScheduleConflict = {
@@ -171,9 +171,9 @@ function validateLesson(lesson: Lesson): ScheduleConflict | null {
   return null; // Конфліктів немає
 }
 
-// ===============================================
+
 // 6. Аналіз та звіти
-// ===============================================
+
 
 // a) Функція для отримання відсотка використання аудиторії
 function getClassroomUtilization(classroomNumber: string): number {
@@ -211,9 +211,9 @@ function getMostPopularCourseType(): CourseType | null {
   return mostPopular;
 }
 
-// ===============================================
+
 // 7. Модифікація даних
-// ===============================================
+
 
 // a) Функція для зміни аудиторії для заняття, якщо це можливо
 function reassignClassroom(lessonId: number, newClassroomNumber: string): boolean {
@@ -249,9 +249,9 @@ function cancelLesson(lessonId: number): void {
   console.log(`Заняття з ID ${lessonId} було видалено.`);
 }
 
-// ===============================================
+
 // 8. Робота з DOM елементами та UI
-// ===============================================
+
 
 // Форма додавання професора
 const addProfessorForm = document.getElementById('addProfessorForm') as HTMLFormElement;
@@ -281,9 +281,9 @@ const utilizationClassroomSelect = document.getElementById('utilizationClassroom
 const popularCourseTypeBtn = document.getElementById('popularCourseTypeBtn') as HTMLButtonElement;
 const popularCourseTypeResult = document.getElementById('popularCourseTypeResult') as HTMLDivElement;
 
-// ===============================================
+
 // 9. Функції для роботи з UI
-// ===============================================
+
 
 /**
  * Оновлює таблицю розкладу
@@ -411,9 +411,9 @@ function changeClassroom(lessonId: number) {
   }
 }
 
-// ===============================================
+
 // 10. Обробка подій форм
-// ===============================================
+
 
 // Обробка додавання професора
 addProfessorForm.addEventListener('submit', function(event) {
@@ -547,9 +547,9 @@ popularCourseTypeBtn.addEventListener('click', function() {
   }
 });
 
-// ===============================================
+
 // 11. Ініціалізація та приклади даних
-// ===============================================
+
 
 function initializeSampleData() {
   try {
