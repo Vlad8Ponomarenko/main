@@ -53,6 +53,7 @@ const calculateTotal = <T extends BaseProduct>(cart: CartItem<T>[]): number => {
   return cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
 };
 
+// Масиви товарів
 const electronics: Electronics[] = [
   { id: 1, name: 'Телефон', price: 10000, category: 'electronics', brand: 'Samsung' },
   { id: 2, name: 'Ноутбук', price: 20000, category: 'electronics', brand: 'Apple' }
@@ -69,12 +70,12 @@ const books: Book[] = [
 ];
 
 const phone = findProduct(electronics, 1);
-console.log(phone);
+console.log(phone); 
 
 const affordableProducts = filterByPrice(electronics, 15000);
-console.log(affordableProducts);
+console.log(affordableProducts); 
 
 const cart: CartItem<BaseProduct>[] = [];
-addToCart(cart, phone!, 2);
-const cartTotal = calculateTotal(cart);
-console.log(cartTotal);
+addToCart(cart, phone!, 2);  
+const cartTotal = calculateTotal(cart);  
+console.log(cartTotal); 

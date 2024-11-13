@@ -18,6 +18,7 @@ var addToCart = function (cart, product, quantity) {
 var calculateTotal = function (cart) {
     return cart.reduce(function (total, item) { return total + item.product.price * item.quantity; }, 0);
 };
+// Масиви товарів
 var electronics = [
     { id: 1, name: 'Телефон', price: 10000, category: 'electronics', brand: 'Samsung' },
     { id: 2, name: 'Ноутбук', price: 20000, category: 'electronics', brand: 'Apple' }

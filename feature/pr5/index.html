@@ -90,6 +90,32 @@
       padding: 1rem;
       margin-top: 2rem;
     }
+    .search-bar {
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: center;
+    }
+    .search-bar input {
+      padding: 0.5rem;
+      font-size: 1rem;
+      width: 250px;
+      margin-right: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+    .cart {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background-color: #007bff;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .cart:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
@@ -99,6 +125,12 @@
   </header>
   
   <div class="container">
+    <!-- Пошук товарів -->
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Пошук товарів..." />
+      <button onclick="searchProducts()">Пошук</button>
+    </div>
+
     <!-- Меню товарів -->
     <nav>
       <ul>
@@ -117,6 +149,10 @@
   <footer>
     <p>&copy; 2024 Інтернет-магазин. Всі права захищені.</p>
   </footer>
+
+  <div class="cart" id="cart-button">
+    Кошик (0)
+  </div>
 
   <!-- Підключення JavaScript -->
   <script src="./dist/shop.js" type="module"></script>
