@@ -22,38 +22,6 @@ type Book = BaseProduct & {
   genre: string;
 };
 
-const findProduct = <T extends BaseProduct>(products: T[], id: number): T | undefined => {
-  return products.find((product: T) => product.id === id);
-};
-
-const filterByPrice = <T extends BaseProduct>(products: T[], maxPrice: number): T[] => {
-  return products.filter((product: T) => product.price <= maxPrice);
-};
-
-type CartItem<T> = {
-  product: T;
-  quantity: number;
-};
-
-const addToCart = <T extends BaseProduct>(
-  cart: CartItem<T>[],
-  product: T,
-  quantity: number
-): CartItem<T>[] => {
-  const existingItem = cart.find((item: CartItem<T>) => item.product.id === product.id);
-  if (existingItem) {
-    existingItem.quantity += quantity;
-  } else {
-    cart.push({ product, quantity });
-  }
-  return cart;
-};
-
-const calculateTotal = <T extends BaseProduct>(cart: CartItem<T>[]): number => {
-  return cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
-};
-
-// Масиви товарів
 const electronics: Electronics[] = [
   { id: 1, name: 'Телефон', price: 10000, category: 'electronics', brand: 'Samsung' },
   { id: 2, name: 'Ноутбук', price: 20000, category: 'electronics', brand: 'Apple' }
@@ -69,13 +37,42 @@ const books: Book[] = [
   { id: 6, name: 'Книга "CSS для початківців"', price: 450, category: 'book', author: 'Jane Smith', genre: 'Web Design' }
 ];
 
-const phone = findProduct(electronics, 1);
-console.log(phone); 
+const products = [...electronics, ...clothing, ...books];
 
-const affordableProducts = filterByPrice(electronics, 15000);
-console.log(affordableProducts); 
+const displayProducts = (products: BaseProduct[]): void => {
+  const productListContainer = document.getElementById('product-list')!;
+  productListContainer.innerHTML = ''; // Очищаємо попередні товари
 
-const cart: CartItem<BaseProduct>[] = [];
-addToCart(cart, phone!, 2);  
-const cartTotal = calculateTotal(cart);  
-console.log(cartTotal); 
+  products.forEach((product) => {
+    const productCard = document.createElement('div');
+    productCard.classList.add('product-card');
+
+    productCard.innerHTML = `
+      <h2>${product.name}</h2>
+      <p>Ціна: ${product.price} грн</p>
+      ${product.description ? `<p>${product.description}</p>` : ''}
+      <button onclick="addToCart(${product.id})">Додати в кошик</button>
+    `;
+
+    productListContainer.appendChild(productCard);
+  });
+};
+
+const filterProducts = (category: string): void => {
+  let filteredProducts: BaseProduct[] = [];
+  
+  if (category === 'electronics') {
+    filteredProducts = electronics;
+  } else if (category === 'clothing') {
+    filteredProducts = clothing;
+  } else if (category === 'book') {
+    filteredProducts = books;
+  } else {
+    filteredProducts = products; // Якщо вибрано "Усі товари"
+  }
+
+  displayProducts(filteredProducts);
+};
+
+// Початковий запуск, щоб відобразити всі товари
+filterProducts('all');
