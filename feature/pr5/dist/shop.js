@@ -22,6 +22,7 @@ var books = [
 ];
 var products = __spreadArray(__spreadArray(__spreadArray([], electronics, true), clothing, true), books, true);
 var cart = [];
+// Функція для відображення товарів
 var displayProducts = function (products) {
     var productListContainer = document.getElementById('product-list');
     productListContainer.innerHTML = '';
@@ -47,25 +48,26 @@ var addToCart = function (productId) {
 };
 var updateCartDisplay = function () {
     var cartContainer = document.getElementById('cart');
-    cartContainer.innerHTML = '';
+    var cartSummary = document.createElement('div');
+    cartSummary.classList.add('cart-summary');
     if (cart.length === 0) {
         cartContainer.innerHTML = '<span>Кошик порожній</span>';
     }
     else {
-        var cartSummary_1 = document.createElement('div');
-        cartSummary_1.classList.add('cart-summary');
+        cartSummary.innerHTML = '';
         cart.forEach(function (item) {
             var cartItem = document.createElement('div');
             cartItem.classList.add('cart-item');
             cartItem.innerHTML = "\n        <p>".concat(item.product.name, " - \u041A\u0456\u043B\u044C\u043A\u0456\u0441\u0442\u044C: ").concat(item.quantity, "</p>\n        <p>\u0426\u0456\u043D\u0430: ").concat(item.product.price * item.quantity, " \u0433\u0440\u043D</p>\n      ");
-            cartSummary_1.appendChild(cartItem);
+            cartSummary.appendChild(cartItem);
         });
         var total = calculateTotal(cart);
         var totalPrice = document.createElement('div');
         totalPrice.classList.add('cart-total');
         totalPrice.innerHTML = "<h3>\u0417\u0430\u0433\u0430\u043B\u044C\u043D\u0430 \u0441\u0443\u043C\u0430: ".concat(total, " \u0433\u0440\u043D</h3>");
-        cartSummary_1.appendChild(totalPrice);
-        cartContainer.appendChild(cartSummary_1);
+        cartSummary.appendChild(totalPrice);
+        cartContainer.innerHTML = '';
+        cartContainer.appendChild(cartSummary);
     }
 };
 var calculateTotal = function (cart) {

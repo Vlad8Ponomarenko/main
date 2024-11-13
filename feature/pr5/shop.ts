@@ -45,9 +45,10 @@ type CartItem<T> = {
   quantity: number;
 };
 
+// Функція для відображення товарів
 const displayProducts = (products: BaseProduct[]): void => {
   const productListContainer = document.getElementById('product-list')!;
-  productListContainer.innerHTML = ''; 
+  productListContainer.innerHTML = '';
 
   products.forEach((product) => {
     const productCard = document.createElement('div');
@@ -79,14 +80,13 @@ const addToCart = (productId: number): void => {
 
 const updateCartDisplay = (): void => {
   const cartContainer = document.getElementById('cart')!;
-  cartContainer.innerHTML = ''; 
+  const cartSummary = document.createElement('div');
+  cartSummary.classList.add('cart-summary');
 
   if (cart.length === 0) {
     cartContainer.innerHTML = '<span>Кошик порожній</span>';
   } else {
-    const cartSummary = document.createElement('div');
-    cartSummary.classList.add('cart-summary');
-
+    cartSummary.innerHTML = ''; 
     cart.forEach(item => {
       const cartItem = document.createElement('div');
       cartItem.classList.add('cart-item');
@@ -103,7 +103,8 @@ const updateCartDisplay = (): void => {
     totalPrice.innerHTML = `<h3>Загальна сума: ${total} грн</h3>`;
     cartSummary.appendChild(totalPrice);
 
-    cartContainer.appendChild(cartSummary);
+    cartContainer.innerHTML = ''; 
+    cartContainer.appendChild(cartSummary); 
   }
 };
 
