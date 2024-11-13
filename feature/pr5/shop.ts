@@ -41,8 +41,7 @@ const products = [...electronics, ...clothing, ...books];
 
 const displayProducts = (products: BaseProduct[]): void => {
   const productListContainer = document.getElementById('product-list')!;
-  productListContainer.innerHTML = ''; // Очищаємо попередні товари
-
+  productListContainer.innerHTML = ''; 
   products.forEach((product) => {
     const productCard = document.createElement('div');
     productCard.classList.add('product-card');
@@ -68,11 +67,19 @@ const filterProducts = (category: string): void => {
   } else if (category === 'book') {
     filteredProducts = books;
   } else {
-    filteredProducts = products; // Якщо вибрано "Усі товари"
+    filteredProducts = products; 
   }
 
   displayProducts(filteredProducts);
 };
 
-// Початковий запуск, щоб відобразити всі товари
-filterProducts('all');
+const addToCart = (productId: number): void => {
+  const product = products.find(p => p.id === productId);
+  if (product) {
+    console.log(`Додано товар: ${product.name}`);
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  filterProducts('all'); 
+});
