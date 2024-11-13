@@ -1,74 +1,40 @@
 "use strict";
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
+var findProduct = function (products, id) {
+    return products.find(function (product) { return product.id === id; });
 };
-// Популярні товари
-var electronics = [
-    {
-        id: 1,
-        name: "Смартфон Samsung Galaxy S21",
-        price: 29999,
-        category: "electronics",
-        brand: "Samsung",
-        description: "Флагманський смартфон з чудовою камерою та дизайном."
-    },
-    {
-        id: 2,
-        name: "Ноутбук Apple MacBook Air",
-        price: 54999,
-        category: "electronics",
-        brand: "Apple",
-        description: "Легкий та потужний ноутбук для роботи та навчання."
+var filterByPrice = function (products, maxPrice) {
+    return products.filter(function (product) { return product.price <= maxPrice; });
+};
+var addToCart = function (cart, product, quantity) {
+    var existingItem = cart.find(function (item) { return item.product.id === product.id; });
+    if (existingItem) {
+        existingItem.quantity += quantity;
     }
+    else {
+        cart.push({ product: product, quantity: quantity });
+    }
+    return cart;
+};
+var calculateTotal = function (cart) {
+    return cart.reduce(function (total, item) { return total + item.product.price * item.quantity; }, 0);
+};
+var electronics = [
+    { id: 1, name: 'Телефон', price: 10000, category: 'electronics', brand: 'Samsung' },
+    { id: 2, name: 'Ноутбук', price: 20000, category: 'electronics', brand: 'Apple' }
 ];
 var clothing = [
-    {
-        id: 3,
-        name: "Куртка зимова",
-        price: 1999,
-        category: "clothing",
-        size: "M",
-        material: "Поліестер",
-        description: "Тепла куртка для зимового сезону."
-    },
-    {
-        id: 4,
-        name: "Джинси Levis",
-        price: 1499,
-        category: "clothing",
-        size: "L",
-        material: "Бавовна",
-        description: "Класичні джинси з високоякісного деніму."
-    }
+    { id: 3, name: 'Куртка', price: 1500, category: 'clothing', size: 'M', material: 'Поліестер' },
+    { id: 4, name: 'Джинси', price: 1200, category: 'clothing', size: 'L', material: 'Бавовна' }
 ];
-// Рендеринг товарів
-var renderProducts = function (products) {
-    var productList = document.getElementById("product-list");
-    productList.innerHTML = ""; // Очистити список
-    products.forEach(function (product) {
-        var productCard = document.createElement("div");
-        productCard.className = "product-card";
-        productCard.innerHTML = "\n      <h2>".concat(product.name, "</h2>\n      <p class=\"price\">").concat(product.price, " \u0433\u0440\u043D</p>\n      <p>").concat(product.description || "Опис відсутній", "</p>\n    ");
-        productList.appendChild(productCard);
-    });
-};
-// Фільтрація товарів
-var filterProducts = function (category) {
-    if (category === "all") {
-        renderProducts(__spreadArray(__spreadArray([], electronics, true), clothing, true));
-    }
-    else if (category === "electronics") {
-        renderProducts(electronics);
-    }
-    else if (category === "clothing") {
-        renderProducts(clothing);
-    }
-};
-// Відобразити всі товари за замовчуванням
-renderProducts(__spreadArray(__spreadArray([], electronics, true), clothing, true));
+var books = [
+    { id: 5, name: 'Книга "JavaScript для початківців"', price: 500, category: 'book', author: 'John Doe', genre: 'Programming' },
+    { id: 6, name: 'Книга "CSS для початківців"', price: 450, category: 'book', author: 'Jane Smith', genre: 'Web Design' }
+];
+var phone = findProduct(electronics, 1);
+console.log(phone);
+var affordableProducts = filterByPrice(electronics, 15000);
+console.log(affordableProducts);
+var cart = [];
+addToCart(cart, phone, 2);
+var cartTotal = calculateTotal(cart);
+console.log(cartTotal);
