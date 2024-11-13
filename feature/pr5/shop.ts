@@ -39,9 +39,17 @@ const books: Book[] = [
 
 const products = [...electronics, ...clothing, ...books];
 
+let cart: CartItem<BaseProduct>[] = [];
+
+type CartItem<T> = {
+  product: T;
+  quantity: number;
+};
+
 const displayProducts = (products: BaseProduct[]): void => {
   const productListContainer = document.getElementById('product-list')!;
   productListContainer.innerHTML = ''; 
+
   products.forEach((product) => {
     const productCard = document.createElement('div');
     productCard.classList.add('product-card');
@@ -59,7 +67,7 @@ const displayProducts = (products: BaseProduct[]): void => {
 
 const filterProducts = (category: string): void => {
   let filteredProducts: BaseProduct[] = [];
-  
+
   if (category === 'electronics') {
     filteredProducts = electronics;
   } else if (category === 'clothing') {
@@ -76,10 +84,46 @@ const filterProducts = (category: string): void => {
 const addToCart = (productId: number): void => {
   const product = products.find(p => p.id === productId);
   if (product) {
+    const existingItem = cart.find(item => item.product.id === product.id);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({ product, quantity: 1 });
+    }
     console.log(`Додано товар: ${product.name}`);
+    updateCartDisplay();
   }
 };
 
+const updateCartDisplay = (): void => {
+  const cartContainer = document.getElementById('cart')!;
+  cartContainer.innerHTML = ''; 
+
+  if (cart.length === 0) {
+    cartContainer.innerHTML = 'Кошик порожній';
+  } else {
+    cart.forEach(item => {
+      const cartItem = document.createElement('div');
+      cartItem.classList.add('cart-item');
+      cartItem.innerHTML = `
+        <p>${item.product.name} - Кількість: ${item.quantity}</p>
+        <p>Ціна: ${item.product.price * item.quantity} грн</p>
+      `;
+      cartContainer.appendChild(cartItem);
+    });
+
+    const total = calculateTotal(cart);
+    const totalPrice = document.createElement('div');
+    totalPrice.classList.add('cart-total');
+    totalPrice.innerHTML = `<h3>Загальна сума: ${total} грн</h3>`;
+    cartContainer.appendChild(totalPrice);
+  }
+};
+
+const calculateTotal = (cart: CartItem<BaseProduct>[]): number => {
+  return cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
+};
+
 document.addEventListener('DOMContentLoaded', () => {
-  filterProducts('all'); 
+  filterProducts('all');
 });
