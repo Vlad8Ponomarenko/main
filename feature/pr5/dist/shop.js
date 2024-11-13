@@ -47,26 +47,12 @@ var addToCart = function (productId) {
 };
 var updateCartDisplay = function () {
     var cartContainer = document.getElementById('cart');
-    var cartSummary = document.createElement('div');
-    cartSummary.classList.add('cart-summary');
     if (cart.length === 0) {
         cartContainer.innerHTML = '<span>Кошик порожній</span>';
     }
     else {
-        cartSummary.innerHTML = '';
-        cart.forEach(function (item) {
-            var cartItem = document.createElement('div');
-            cartItem.classList.add('cart-item');
-            cartItem.innerHTML = "\n        <p>".concat(item.product.name, " - \u041A\u0456\u043B\u044C\u043A\u0456\u0441\u0442\u044C: ").concat(item.quantity, "</p>\n        <p>\u0426\u0456\u043D\u0430: ").concat(item.product.price * item.quantity, " \u0433\u0440\u043D</p>\n      ");
-            cartSummary.appendChild(cartItem);
-        });
-        var total = calculateTotal(cart);
-        var totalPrice = document.createElement('div');
-        totalPrice.classList.add('cart-total');
-        totalPrice.innerHTML = "<h3>\u0417\u0430\u0433\u0430\u043B\u044C\u043D\u0430 \u0441\u0443\u043C\u0430: ".concat(total, " \u0433\u0440\u043D</h3>");
-        cartSummary.appendChild(totalPrice);
-        cartContainer.innerHTML = '';
-        cartContainer.appendChild(cartSummary);
+        var totalPrice = calculateTotal(cart);
+        cartContainer.innerHTML = "\n      <span>\u041A\u043E\u0448\u0438\u043A (".concat(cart.length, " \u0442\u043E\u0432\u0430\u0440\u0456\u0432) - ").concat(totalPrice, " \u0433\u0440\u043D</span>\n    ");
     }
 };
 var calculateTotal = function (cart) {
