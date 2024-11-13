@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Інтернет-магазин</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      color: #343a40;
+    }
+    header {
+      background-color: #007bff;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    nav {
+      background: #fff;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 2rem;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+    nav ul li {
+      display: inline;
+    }
+    nav ul li button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    nav ul li button:hover {
+      background-color: #0056b3;
+    }
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    .product-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 1rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease;
+    }
+    .product-card:hover {
+      transform: scale(1.03);
+    }
+    .product-card h2 {
+      font-size: 1.5rem;
+      margin: 0 0 0.5rem;
+    }
+    .product-card p {
+      margin: 0.5rem 0;
+    }
+    .product-card .price {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #28a745;
+    }
+    footer {
+      background-color: #343a40;
+      color: #fff;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Інтернет-магазин</h1>
+    <p>Знаходьте свої улюблені товари тут!</p>
+  </header>
+  
+  <div class="container">
+    <!-- Меню товарів -->
+    <nav>
+      <ul>
+        <li><button onclick="filterProducts('all')">Усі товари</button></li>
+        <li><button onclick="filterProducts('electronics')">Електроніка</button></li>
+        <li><button onclick="filterProducts('clothing')">Одяг</button></li>
+      </ul>
+    </nav>
+    
+    <!-- Список товарів -->
+    <div class="product-list" id="product-list">
+      <!-- Товари будуть динамічно додані тут -->
+    </div>
+  </div>
+  
+  <footer>
+    <p>&copy; 2024 Інтернет-магазин. Всі права захищені.</p>
+  </footer>
+
+  <!-- Підключення JavaScript -->
+  <script src="./dist/shop.js" type="module"></script>
+</body>
+</html>
