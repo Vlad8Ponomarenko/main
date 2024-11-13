@@ -45,10 +45,9 @@ type CartItem<T> = {
   quantity: number;
 };
 
-// Функція для відображення товарів
 const displayProducts = (products: BaseProduct[]): void => {
   const productListContainer = document.getElementById('product-list')!;
-  productListContainer.innerHTML = '';
+  productListContainer.innerHTML = ''; 
 
   products.forEach((product) => {
     const productCard = document.createElement('div');
@@ -74,7 +73,7 @@ const addToCart = (productId: number): void => {
     } else {
       cart.push({ product, quantity: 1 });
     }
-    updateCartDisplay();
+    updateCartDisplay(); 
   }
 };
 
@@ -113,5 +112,6 @@ const calculateTotal = (cart: CartItem<BaseProduct>[]): number => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  displayProducts(products);
+  displayProducts(products); 
+  updateCartDisplay(); 
 });

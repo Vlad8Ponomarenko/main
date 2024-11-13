@@ -22,7 +22,6 @@ var books = [
 ];
 var products = __spreadArray(__spreadArray(__spreadArray([], electronics, true), clothing, true), books, true);
 var cart = [];
-// Функція для відображення товарів
 var displayProducts = function (products) {
     var productListContainer = document.getElementById('product-list');
     productListContainer.innerHTML = '';
@@ -75,4 +74,5 @@ var calculateTotal = function (cart) {
 };
 document.addEventListener('DOMContentLoaded', function () {
     displayProducts(products);
+    updateCartDisplay();
 });
