@@ -38,7 +38,6 @@ const books: Book[] = [
 ];
 
 const products = [...electronics, ...clothing, ...books];
-
 let cart: CartItem<BaseProduct>[] = [];
 
 type CartItem<T> = {
@@ -53,32 +52,16 @@ const displayProducts = (products: BaseProduct[]): void => {
   products.forEach((product) => {
     const productCard = document.createElement('div');
     productCard.classList.add('product-card');
-
+    
     productCard.innerHTML = `
       <h2>${product.name}</h2>
       <p>Ціна: ${product.price} грн</p>
       ${product.description ? `<p>${product.description}</p>` : ''}
       <button onclick="addToCart(${product.id})">Додати в кошик</button>
     `;
-
+    
     productListContainer.appendChild(productCard);
   });
-};
-
-const filterProducts = (category: string): void => {
-  let filteredProducts: BaseProduct[] = [];
-
-  if (category === 'electronics') {
-    filteredProducts = electronics;
-  } else if (category === 'clothing') {
-    filteredProducts = clothing;
-  } else if (category === 'book') {
-    filteredProducts = books;
-  } else {
-    filteredProducts = products; 
-  }
-
-  displayProducts(filteredProducts);
 };
 
 const addToCart = (productId: number): void => {
@@ -90,7 +73,6 @@ const addToCart = (productId: number): void => {
     } else {
       cart.push({ product, quantity: 1 });
     }
-    console.log(`Додано товар: ${product.name}`);
     updateCartDisplay();
   }
 };
@@ -100,8 +82,11 @@ const updateCartDisplay = (): void => {
   cartContainer.innerHTML = ''; 
 
   if (cart.length === 0) {
-    cartContainer.innerHTML = 'Кошик порожній';
+    cartContainer.innerHTML = '<span>Кошик порожній</span>';
   } else {
+    const cartSummary = document.createElement('div');
+    cartSummary.classList.add('cart-summary');
+
     cart.forEach(item => {
       const cartItem = document.createElement('div');
       cartItem.classList.add('cart-item');
@@ -109,14 +94,16 @@ const updateCartDisplay = (): void => {
         <p>${item.product.name} - Кількість: ${item.quantity}</p>
         <p>Ціна: ${item.product.price * item.quantity} грн</p>
       `;
-      cartContainer.appendChild(cartItem);
+      cartSummary.appendChild(cartItem);
     });
 
     const total = calculateTotal(cart);
     const totalPrice = document.createElement('div');
     totalPrice.classList.add('cart-total');
     totalPrice.innerHTML = `<h3>Загальна сума: ${total} грн</h3>`;
-    cartContainer.appendChild(totalPrice);
+    cartSummary.appendChild(totalPrice);
+
+    cartContainer.appendChild(cartSummary);
   }
 };
 
@@ -125,5 +112,5 @@ const calculateTotal = (cart: CartItem<BaseProduct>[]): number => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  filterProducts('all');
+  displayProducts(products);
 });
