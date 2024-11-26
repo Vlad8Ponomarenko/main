@@ -11,12 +11,29 @@ interface Article extends BaseContent {
   author: string;
 }
 
-const articles: Article[] = [];
-
-// Генерує унікальний ID
 const generateId = (): string => Math.random().toString(36).substring(2, 9);
 
-// Оновлює список статей в HTML
+// Завантаження статей з localStorage
+const loadArticles = (): Article[] => {
+  const data = localStorage.getItem('articles');
+  if (data) {
+    return JSON.parse(data).map((article: Article) => ({
+      ...article,
+      createdAt: new Date(article.createdAt),
+      updatedAt: new Date(article.updatedAt),
+    }));
+  }
+  return [];
+};
+
+// Збереження статей до localStorage
+const saveArticles = (articles: Article[]) => {
+  localStorage.setItem('articles', JSON.stringify(articles));
+};
+
+const articles: Article[] = loadArticles();
+
+// Оновлення списку статей в HTML
 const updateArticlesList = () => {
   const articlesDiv = document.getElementById('articles');
   if (!articlesDiv) return;
@@ -34,13 +51,15 @@ const updateArticlesList = () => {
         <p>${article.content}</p>
         <small><strong>Author:</strong> ${article.author}</small>
         <small><strong>Status:</strong> ${article.status}</small>
+        <small><strong>Created At:</strong> ${article.createdAt.toLocaleString()}</small>
+        <small><strong>Updated At:</strong> ${article.updatedAt.toLocaleString()}</small>
       </div>
     `
     )
     .join('');
 };
 
-// Обробляє створення нової статті
+// Обробка створення нової статті
 const handleNewArticle = (event: Event) => {
   event.preventDefault();
 
@@ -61,6 +80,7 @@ const handleNewArticle = (event: Event) => {
   };
 
   articles.push(newArticle);
+  saveArticles(articles);
 
   // Очищаємо форму
   titleInput.value = '';

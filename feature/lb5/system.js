@@ -1,8 +1,19 @@
 "use strict";
-const articles = [];
-// Генерує унікальний ID
 const generateId = () => Math.random().toString(36).substring(2, 9);
-// Оновлює список статей в HTML
+// Завантаження статей з localStorage
+const loadArticles = () => {
+    const data = localStorage.getItem('articles');
+    if (data) {
+        return JSON.parse(data).map((article) => (Object.assign(Object.assign({}, article), { createdAt: new Date(article.createdAt), updatedAt: new Date(article.updatedAt) })));
+    }
+    return [];
+};
+// Збереження статей до localStorage
+const saveArticles = (articles) => {
+    localStorage.setItem('articles', JSON.stringify(articles));
+};
+const articles = loadArticles();
+// Оновлення списку статей в HTML
 const updateArticlesList = () => {
     const articlesDiv = document.getElementById('articles');
     if (!articlesDiv)
@@ -18,11 +29,13 @@ const updateArticlesList = () => {
         <p>${article.content}</p>
         <small><strong>Author:</strong> ${article.author}</small>
         <small><strong>Status:</strong> ${article.status}</small>
+        <small><strong>Created At:</strong> ${article.createdAt.toLocaleString()}</small>
+        <small><strong>Updated At:</strong> ${article.updatedAt.toLocaleString()}</small>
       </div>
     `)
         .join('');
 };
-// Обробляє створення нової статті
+// Обробка створення нової статті
 const handleNewArticle = (event) => {
     event.preventDefault();
     const titleInput = document.getElementById('title');
@@ -40,6 +53,7 @@ const handleNewArticle = (event) => {
         author: authorInput.value,
     };
     articles.push(newArticle);
+    saveArticles(articles);
     // Очищаємо форму
     titleInput.value = '';
     contentInput.value = '';
