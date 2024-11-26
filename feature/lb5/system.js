@@ -13,7 +13,7 @@ const saveArticles = (articles) => {
     localStorage.setItem('articles', JSON.stringify(articles));
 };
 const articles = loadArticles();
-// Оновлення списку статей в HTML
+// Оновлення розділу Articles
 const updateArticlesList = () => {
     const articlesDiv = document.getElementById('articles');
     if (!articlesDiv)
@@ -27,15 +27,15 @@ const updateArticlesList = () => {
       <div class="article">
         <h3>${article.title}</h3>
         <p>${article.content}</p>
-        <small><strong>Author:</strong> ${article.author}</small>
-        <small><strong>Status:</strong> ${article.status}</small>
-        <small><strong>Created At:</strong> ${article.createdAt.toLocaleString()}</small>
+        <small><strong>Author:</strong> ${article.author}</small><br>
+        <small><strong>Status:</strong> ${article.status}</small><br>
+        <small><strong>Created At:</strong> ${article.createdAt.toLocaleString()}</small><br>
         <small><strong>Updated At:</strong> ${article.updatedAt.toLocaleString()}</small>
       </div>
     `)
         .join('');
 };
-// Обробка створення нової статті
+// Додавання нової статті
 const handleNewArticle = (event) => {
     event.preventDefault();
     const titleInput = document.getElementById('title');
@@ -60,7 +60,7 @@ const handleNewArticle = (event) => {
     authorInput.value = '';
     updateArticlesList();
 };
-// Додаємо слухач подій на форму
+// Підключення обробників подій
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('articleForm');
     if (form) {

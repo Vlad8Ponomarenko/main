@@ -17,7 +17,7 @@ const generateId = (): string => Math.random().toString(36).substring(2, 9);
 const loadArticles = (): Article[] => {
   const data = localStorage.getItem('articles');
   if (data) {
-    return JSON.parse(data).map((article: Article) => ({
+    return JSON.parse(data).map((article: any) => ({
       ...article,
       createdAt: new Date(article.createdAt),
       updatedAt: new Date(article.updatedAt),
@@ -33,7 +33,7 @@ const saveArticles = (articles: Article[]) => {
 
 const articles: Article[] = loadArticles();
 
-// Оновлення списку статей в HTML
+// Оновлення розділу Articles
 const updateArticlesList = () => {
   const articlesDiv = document.getElementById('articles');
   if (!articlesDiv) return;
@@ -49,9 +49,9 @@ const updateArticlesList = () => {
       <div class="article">
         <h3>${article.title}</h3>
         <p>${article.content}</p>
-        <small><strong>Author:</strong> ${article.author}</small>
-        <small><strong>Status:</strong> ${article.status}</small>
-        <small><strong>Created At:</strong> ${article.createdAt.toLocaleString()}</small>
+        <small><strong>Author:</strong> ${article.author}</small><br>
+        <small><strong>Status:</strong> ${article.status}</small><br>
+        <small><strong>Created At:</strong> ${article.createdAt.toLocaleString()}</small><br>
         <small><strong>Updated At:</strong> ${article.updatedAt.toLocaleString()}</small>
       </div>
     `
@@ -59,7 +59,7 @@ const updateArticlesList = () => {
     .join('');
 };
 
-// Обробка створення нової статті
+// Додавання нової статті
 const handleNewArticle = (event: Event) => {
   event.preventDefault();
 
@@ -90,7 +90,7 @@ const handleNewArticle = (event: Event) => {
   updateArticlesList();
 };
 
-// Додаємо слухач подій на форму
+// Підключення обробників подій
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('articleForm');
   if (form) {
