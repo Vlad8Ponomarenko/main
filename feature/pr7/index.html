@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Management System</title>
+    <style>
+        /* Загальний стиль сторінки */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        /* Заголовок */
+        h1 {
+            text-align: center;
+            background-color: #4caf50;
+            color: white;
+            margin: 0;
+            padding: 20px 0;
+        }
+
+        /* Контейнер */
+        #app {
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        /* Кнопки */
+        button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px 0;
+            color: white;
+            background-color: #4caf50;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Список або таблиця */
+        ul, table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        ul li, table th, table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        /* Для адаптивності */
+        @media (max-width: 600px) {
+            #app {
+                padding: 10px;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>University Management System</h1>
+    <div id="app">
+        <p>Welcome to the University Management System. Select an action:</p>
+        <button onclick="alert('Enroll a student')">Enroll Student</button>
+        <button onclick="alert('View Courses')">View Courses</button>
+        <button onclick="alert('Check Grades')">Check Grades</button>
+    </div>
+
+    <!-- Підключення JavaScript -->
+    <script src="dist/system.js"></script>
+</body>
+</html>
