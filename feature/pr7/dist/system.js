@@ -1,5 +1,5 @@
 "use strict";
-// Enum definitions
+// Enums
 var StudentStatus;
 (function (StudentStatus) {
     StudentStatus["Active"] = "Active";
@@ -32,66 +32,74 @@ var Faculty;
     Faculty["Law"] = "Law";
     Faculty["Engineering"] = "Engineering";
 })(Faculty || (Faculty = {}));
-// Class implementation
+// University Management System Class
 class UniversityManagementSystem {
     constructor() {
         this.students = [];
         this.courses = [];
         this.grades = [];
-        this.studentIdCounter = 1;
-        this.courseIdCounter = 1;
+        this.currentStudentId = 1;
+        this.currentCourseId = 1;
     }
+    // Enroll a new student
     enrollStudent(student) {
-        const newStudent = Object.assign(Object.assign({}, student), { id: this.studentIdCounter++ });
+        const newStudent = Object.assign({ id: this.currentStudentId++ }, student);
         this.students.push(newStudent);
         return newStudent;
     }
+    // Register a student for a course
     registerForCourse(studentId, courseId) {
-        const course = this.courses.find(c => c.id === courseId);
-        if (!course)
-            throw new Error("Course not found");
         const student = this.students.find(s => s.id === studentId);
+        const course = this.courses.find(c => c.id === courseId);
         if (!student)
             throw new Error("Student not found");
+        if (!course)
+            throw new Error("Course not found");
         if (student.faculty !== course.faculty) {
-            throw new Error("Student's faculty does not match the course's faculty");
+            throw new Error("Student cannot register for a course from a different faculty");
         }
-        const enrolledStudents = this.grades.filter(g => g.courseId === courseId).length;
-        if (enrolledStudents >= course.maxStudents) {
+        const courseRegistrations = this.grades.filter(g => g.courseId === courseId);
+        if (courseRegistrations.length >= course.maxStudents) {
             throw new Error("Course is full");
-        }
-    }
-    setGrade(studentId, courseId, grade) {
-        const isRegistered = this.grades.some(g => g.studentId === studentId && g.courseId === courseId);
-        if (!isRegistered) {
-            throw new Error("Student is not registered for the course");
         }
         this.grades.push({
             studentId,
             courseId,
-            grade,
+            grade: GradeValue.Unsatisfactory, // Default grade
             date: new Date(),
-            semester: this.getCurrentSemester(),
+            semester: course.semester,
         });
     }
+    // Set grade for a student in a course
+    setGrade(studentId, courseId, grade) {
+        const gradeEntry = this.grades.find(g => g.studentId === studentId && g.courseId === courseId);
+        if (!gradeEntry)
+            throw new Error("Student is not registered for this course");
+        gradeEntry.grade = grade;
+    }
+    // Update student status
     updateStudentStatus(studentId, newStatus) {
         const student = this.students.find(s => s.id === studentId);
         if (!student)
             throw new Error("Student not found");
-        if (student.status === StudentStatus.Graduated && newStatus !== StudentStatus.Graduated) {
-            throw new Error("Cannot change status of a graduated student");
+        if (newStatus === StudentStatus.Graduated && student.status !== StudentStatus.Active) {
+            throw new Error("Only active students can graduate");
         }
         student.status = newStatus;
     }
+    // Get students by faculty
     getStudentsByFaculty(faculty) {
-        return this.students.filter(s => s.faculty === faculty);
+        return this.students.filter(student => student.faculty === faculty);
     }
+    // Get grades of a student
     getStudentGrades(studentId) {
-        return this.grades.filter(g => g.studentId === studentId);
+        return this.grades.filter(grade => grade.studentId === studentId);
     }
+    // Get available courses by faculty and semester
     getAvailableCourses(faculty, semester) {
-        return this.courses.filter(c => c.faculty === faculty && c.semester === semester);
+        return this.courses.filter(course => course.faculty === faculty && course.semester === semester);
     }
+    // Calculate average grade of a student
     calculateAverageGrade(studentId) {
         const studentGrades = this.getStudentGrades(studentId);
         if (studentGrades.length === 0)
@@ -99,16 +107,41 @@ class UniversityManagementSystem {
         const total = studentGrades.reduce((sum, g) => sum + g.grade, 0);
         return total / studentGrades.length;
     }
+    // Get a list of top-performing students by faculty
     getTopStudentsByFaculty(faculty) {
         return this.students
-            .filter(s => s.faculty === faculty)
-            .filter(s => {
-            const avgGrade = this.calculateAverageGrade(s.id);
-            return avgGrade >= 4.5;
+            .filter(student => student.faculty === faculty)
+            .filter(student => {
+            const avgGrade = this.calculateAverageGrade(student.id);
+            return avgGrade >= GradeValue.Excellent;
         });
     }
-    getCurrentSemester() {
-        const month = new Date().getMonth() + 1; // Months are zero-based
-        return month >= 1 && month <= 6 ? Semester.First : Semester.Second;
+    // Add course (for simplicity)
+    addCourse(course) {
+        const newCourse = Object.assign({ id: this.currentCourseId++ }, course);
+        this.courses.push(newCourse);
+        return newCourse;
     }
 }
+// Example usage:
+const ums = new UniversityManagementSystem();
+const student = ums.enrollStudent({
+    fullName: "John Doe",
+    faculty: Faculty.Computer_Science,
+    year: 1,
+    status: StudentStatus.Active,
+    enrollmentDate: new Date(),
+    groupNumber: "CS-101",
+});
+const course = ums.addCourse({
+    name: "Introduction to Programming",
+    type: CourseType.Mandatory,
+    credits: 5,
+    semester: Semester.First,
+    faculty: Faculty.Computer_Science,
+    maxStudents: 30,
+});
+ums.registerForCourse(student.id, course.id);
+ums.setGrade(student.id, course.id, GradeValue.Excellent);
+console.log("Average Grade:", ums.calculateAverageGrade(student.id));
+console.log("Top Students:", ums.getTopStudentsByFaculty(Faculty.Computer_Science));
