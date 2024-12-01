@@ -50,14 +50,32 @@
             background-color: #45a049;
         }
 
+        /* Форма */
+        form {
+            margin-top: 20px;
+        }
+
+        form input, form select {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        form label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
         /* Списки та таблиці */
-        ul, table {
+        table {
             width: 100%;
             margin-top: 20px;
             border-collapse: collapse;
         }
 
-        ul li, table th, table td {
+        table th, table td {
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ddd;
@@ -67,7 +85,6 @@
             background-color: #f2f2f2;
         }
 
-        /* Заголовок таблиці */
         caption {
             font-weight: bold;
             margin-bottom: 10px;
@@ -90,93 +107,181 @@
     <h1>University Management System</h1>
     <div id="app">
         <p>Welcome to the University Management System. Select an action:</p>
+        <button onclick="showStudentForm()">Add Student</button>
+        <button onclick="showCourseForm()">Add Course</button>
+        <button onclick="showGradeForm()">Add Grade</button>
         <button onclick="displayStudents()">View Students</button>
         <button onclick="displayCourses()">View Courses</button>
         <button onclick="displayGrades()">View Grades</button>
+
+        <!-- Форми -->
+        <div id="forms" style="display: none;">
+            <form id="studentForm" style="display: none;" onsubmit="addStudent(event)">
+                <h3>Add New Student</h3>
+                <label for="studentName">Full Name:</label>
+                <input type="text" id="studentName" required>
+                <label for="studentFaculty">Faculty:</label>
+                <select id="studentFaculty">
+                    <option value="Computer_Science">Computer Science</option>
+                    <option value="Economics">Economics</option>
+                    <option value="Law">Law</option>
+                    <option value="Engineering">Engineering</option>
+                </select>
+                <label for="studentYear">Year:</label>
+                <input type="number" id="studentYear" min="1" max="6" required>
+                <label for="studentGroup">Group Number:</label>
+                <input type="text" id="studentGroup" required>
+                <button type="submit">Add Student</button>
+            </form>
+
+            <form id="courseForm" style="display: none;" onsubmit="addCourse(event)">
+                <h3>Add New Course</h3>
+                <label for="courseName">Course Name:</label>
+                <input type="text" id="courseName" required>
+                <label for="courseType">Course Type:</label>
+                <select id="courseType">
+                    <option value="Mandatory">Mandatory</option>
+                    <option value="Optional">Optional</option>
+                    <option value="Special">Special</option>
+                </select>
+                <label for="courseCredits">Credits:</label>
+                <input type="number" id="courseCredits" min="1" max="10" required>
+                <label for="courseSemester">Semester:</label>
+                <select id="courseSemester">
+                    <option value="First">First</option>
+                    <option value="Second">Second</option>
+                </select>
+                <button type="submit">Add Course</button>
+            </form>
+
+            <form id="gradeForm" style="display: none;" onsubmit="addGrade(event)">
+                <h3>Add Grade</h3>
+                <label for="gradeStudentId">Student ID:</label>
+                <input type="number" id="gradeStudentId" required>
+                <label for="gradeCourseId">Course ID:</label>
+                <input type="number" id="gradeCourseId" required>
+                <label for="gradeValue">Grade:</label>
+                <select id="gradeValue">
+                    <option value="5">Excellent</option>
+                    <option value="4">Good</option>
+                    <option value="3">Satisfactory</option>
+                    <option value="2">Unsatisfactory</option>
+                </select>
+                <button type="submit">Add Grade</button>
+            </form>
+        </div>
+
+        <!-- Таблиці -->
+        <div id="dataTables" style="display: none;">
+            <table id="studentsTable" style="display: none;">
+                <caption>Students</caption>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Faculty</th>
+                        <th>Year</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <table id="coursesTable" style="display: none;">
+                <caption>Courses</caption>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Credits</th>
+                        <th>Semester</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <table id="gradesTable" style="display: none;">
+                <caption>Grades</caption>
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Course ID</th>
+                        <th>Grade</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- Таблиці для відображення даних -->
-    <div id="dataTables" style="display: none;">
-        <table id="studentsTable" style="display: none;">
-            <caption>Students</caption>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Full Name</th>
-                    <th>Faculty</th>
-                    <th>Year</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-
-        <table id="coursesTable" style="display: none;">
-            <caption>Courses</caption>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Credits</th>
-                    <th>Semester</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-
-        <table id="gradesTable" style="display: none;">
-            <caption>Grades</caption>
-            <thead>
-                <tr>
-                    <th>Student ID</th>
-                    <th>Course ID</th>
-                    <th>Grade</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <!-- Підключення JavaScript -->
     <script>
-        // Функції для відображення даних
+        const students = [];
+        const courses = [];
+        const grades = [];
+
+        function showStudentForm() {
+            document.getElementById("studentForm").style.display = "block";
+            document.getElementById("courseForm").style.display = "none";
+            document.getElementById("gradeForm").style.display = "none";
+        }
+
+        function showCourseForm() {
+            document.getElementById("studentForm").style.display = "none";
+            document.getElementById("courseForm").style.display = "block";
+            document.getElementById("gradeForm").style.display = "none";
+        }
+
+        function showGradeForm() {
+            document.getElementById("studentForm").style.display = "none";
+            document.getElementById("courseForm").style.display = "none";
+            document.getElementById("gradeForm").style.display = "block";
+        }
+
+        function addStudent(event) {
+            event.preventDefault();
+            const student = {
+                id: students.length + 1,
+                fullName: document.getElementById("studentName").value,
+                faculty: document.getElementById("studentFaculty").value,
+                year: Number(document.getElementById("studentYear").value),
+                groupNumber: document.getElementById("studentGroup").value,
+                status: "Active",
+            };
+            students.push(student);
+            alert("Student added successfully!");
+        }
+
+        function addCourse(event) {
+            event.preventDefault();
+            const course = {
+                id: courses.length + 1,
+                name: document.getElementById("courseName").value,
+                type: document.getElementById("courseType").value,
+                credits: Number(document.getElementById("courseCredits").value),
+                semester: document.getElementById("courseSemester").value,
+            };
+            courses.push(course);
+            alert("Course added successfully!");
+        }
+
+        function addGrade(event) {
+            event.preventDefault();
+            const grade = {
+                studentId: Number(document.getElementById("gradeStudentId").value),
+                courseId: Number(document.getElementById("gradeCourseId").value),
+                value: document.getElementById("gradeValue").value,
+                date: new Date().toLocaleDateString(),
+            };
+            grades.push(grade);
+            alert("Grade added successfully!");
+        }
+
         function displayStudents() {
-            document.getElementById('coursesTable').style.display = 'none';
-            document.getElementById('gradesTable').style.display = 'none';
-            const studentsTable = document.getElementById('studentsTable');
-            studentsTable.style.display = 'table';
-            document.getElementById('dataTables').style.display = 'block';
-            populateStudentsTable();
-        }
-
-        function displayCourses() {
-            document.getElementById('studentsTable').style.display = 'none';
-            document.getElementById('gradesTable').style.display = 'none';
-            const coursesTable = document.getElementById('coursesTable');
-            coursesTable.style.display = 'table';
-            document.getElementById('dataTables').style.display = 'block';
-            populateCoursesTable();
-        }
-
-        function displayGrades() {
-            document.getElementById('studentsTable').style.display = 'none';
-            document.getElementById('coursesTable').style.display = 'none';
-            const gradesTable = document.getElementById('gradesTable');
-            gradesTable.style.display = 'table';
-            document.getElementById('dataTables').style.display = 'block';
-            populateGradesTable();
-        }
-
-        // Заповнення таблиць (імітовані дані для прикладу)
-        function populateStudentsTable() {
-            const students = [
-                { id: 1, fullName: 'John Doe', faculty: 'Computer_Science', year: 1, status: 'Active' },
-                { id: 2, fullName: 'Jane Smith', faculty: 'Economics', year: 2, status: 'Graduated' },
-            ];
-            const tbody = document.getElementById('studentsTable').querySelector('tbody');
-            tbody.innerHTML = '';
+            const table = document.getElementById("studentsTable");
+            const tbody = table.querySelector("tbody");
+            tbody.innerHTML = "";
             students.forEach(student => {
                 const row = `<tr>
                     <td>${student.id}</td>
@@ -187,15 +292,13 @@
                 </tr>`;
                 tbody.innerHTML += row;
             });
+            table.style.display = "table";
         }
 
-        function populateCoursesTable() {
-            const courses = [
-                { id: 1, name: 'Introduction to Programming', type: 'Mandatory', credits: 5, semester: 'First' },
-                { id: 2, name: 'Microeconomics', type: 'Optional', credits: 3, semester: 'Second' },
-            ];
-            const tbody = document.getElementById('coursesTable').querySelector('tbody');
-            tbody.innerHTML = '';
+        function displayCourses() {
+            const table = document.getElementById("coursesTable");
+            const tbody = table.querySelector("tbody");
+            tbody.innerHTML = "";
             courses.forEach(course => {
                 const row = `<tr>
                     <td>${course.id}</td>
@@ -206,24 +309,23 @@
                 </tr>`;
                 tbody.innerHTML += row;
             });
+            table.style.display = "table";
         }
 
-        function populateGradesTable() {
-            const grades = [
-                { studentId: 1, courseId: 1, grade: 'Excellent', date: '2024-01-15' },
-                { studentId: 2, courseId: 2, grade: 'Good', date: '2024-02-10' },
-            ];
-            const tbody = document.getElementById('gradesTable').querySelector('tbody');
-            tbody.innerHTML = '';
+        function displayGrades() {
+            const table = document.getElementById("gradesTable");
+            const tbody = table.querySelector("tbody");
+            tbody.innerHTML = "";
             grades.forEach(grade => {
                 const row = `<tr>
                     <td>${grade.studentId}</td>
                     <td>${grade.courseId}</td>
-                    <td>${grade.grade}</td>
+                    <td>${grade.value}</td>
                     <td>${grade.date}</td>
                 </tr>`;
                 tbody.innerHTML += row;
             });
+            table.style.display = "table";
         }
     </script>
 </body>
