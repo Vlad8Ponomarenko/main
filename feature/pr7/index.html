@@ -38,7 +38,7 @@
             display: inline-block;
             padding: 10px 20px;
             font-size: 16px;
-            margin: 10px 0;
+            margin: 10px 5px;
             color: white;
             background-color: #4caf50;
             border: none;
@@ -50,7 +50,7 @@
             background-color: #45a049;
         }
 
-        /* Список або таблиця */
+        /* Списки та таблиці */
         ul, table {
             width: 100%;
             margin-top: 20px;
@@ -65,6 +65,13 @@
 
         table th {
             background-color: #f2f2f2;
+        }
+
+        /* Заголовок таблиці */
+        caption {
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: left;
         }
 
         /* Для адаптивності */
@@ -83,12 +90,141 @@
     <h1>University Management System</h1>
     <div id="app">
         <p>Welcome to the University Management System. Select an action:</p>
-        <button onclick="alert('Enroll a student')">Enroll Student</button>
-        <button onclick="alert('View Courses')">View Courses</button>
-        <button onclick="alert('Check Grades')">Check Grades</button>
+        <button onclick="displayStudents()">View Students</button>
+        <button onclick="displayCourses()">View Courses</button>
+        <button onclick="displayGrades()">View Grades</button>
+    </div>
+
+    <!-- Таблиці для відображення даних -->
+    <div id="dataTables" style="display: none;">
+        <table id="studentsTable" style="display: none;">
+            <caption>Students</caption>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Faculty</th>
+                    <th>Year</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <table id="coursesTable" style="display: none;">
+            <caption>Courses</caption>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Credits</th>
+                    <th>Semester</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <table id="gradesTable" style="display: none;">
+            <caption>Grades</caption>
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Course ID</th>
+                    <th>Grade</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 
     <!-- Підключення JavaScript -->
-    <script src="dist/system.js"></script>
+    <script>
+        // Функції для відображення даних
+        function displayStudents() {
+            document.getElementById('coursesTable').style.display = 'none';
+            document.getElementById('gradesTable').style.display = 'none';
+            const studentsTable = document.getElementById('studentsTable');
+            studentsTable.style.display = 'table';
+            document.getElementById('dataTables').style.display = 'block';
+            populateStudentsTable();
+        }
+
+        function displayCourses() {
+            document.getElementById('studentsTable').style.display = 'none';
+            document.getElementById('gradesTable').style.display = 'none';
+            const coursesTable = document.getElementById('coursesTable');
+            coursesTable.style.display = 'table';
+            document.getElementById('dataTables').style.display = 'block';
+            populateCoursesTable();
+        }
+
+        function displayGrades() {
+            document.getElementById('studentsTable').style.display = 'none';
+            document.getElementById('coursesTable').style.display = 'none';
+            const gradesTable = document.getElementById('gradesTable');
+            gradesTable.style.display = 'table';
+            document.getElementById('dataTables').style.display = 'block';
+            populateGradesTable();
+        }
+
+        // Заповнення таблиць (імітовані дані для прикладу)
+        function populateStudentsTable() {
+            const students = [
+                { id: 1, fullName: 'John Doe', faculty: 'Computer_Science', year: 1, status: 'Active' },
+                { id: 2, fullName: 'Jane Smith', faculty: 'Economics', year: 2, status: 'Graduated' },
+            ];
+            const tbody = document.getElementById('studentsTable').querySelector('tbody');
+            tbody.innerHTML = '';
+            students.forEach(student => {
+                const row = `<tr>
+                    <td>${student.id}</td>
+                    <td>${student.fullName}</td>
+                    <td>${student.faculty}</td>
+                    <td>${student.year}</td>
+                    <td>${student.status}</td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function populateCoursesTable() {
+            const courses = [
+                { id: 1, name: 'Introduction to Programming', type: 'Mandatory', credits: 5, semester: 'First' },
+                { id: 2, name: 'Microeconomics', type: 'Optional', credits: 3, semester: 'Second' },
+            ];
+            const tbody = document.getElementById('coursesTable').querySelector('tbody');
+            tbody.innerHTML = '';
+            courses.forEach(course => {
+                const row = `<tr>
+                    <td>${course.id}</td>
+                    <td>${course.name}</td>
+                    <td>${course.type}</td>
+                    <td>${course.credits}</td>
+                    <td>${course.semester}</td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function populateGradesTable() {
+            const grades = [
+                { studentId: 1, courseId: 1, grade: 'Excellent', date: '2024-01-15' },
+                { studentId: 2, courseId: 2, grade: 'Good', date: '2024-02-10' },
+            ];
+            const tbody = document.getElementById('gradesTable').querySelector('tbody');
+            tbody.innerHTML = '';
+            grades.forEach(grade => {
+                const row = `<tr>
+                    <td>${grade.studentId}</td>
+                    <td>${grade.courseId}</td>
+                    <td>${grade.grade}</td>
+                    <td>${grade.date}</td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+    </script>
 </body>
 </html>
