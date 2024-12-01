@@ -1,5 +1,5 @@
 "use strict";
-// Enums
+// Enum типи для статусів студентів, типів курсів, семестрів, оцінок та факультетів
 var StudentStatus;
 (function (StudentStatus) {
     StudentStatus["Active"] = "Active";
@@ -18,13 +18,13 @@ var Semester;
     Semester["First"] = "First";
     Semester["Second"] = "Second";
 })(Semester || (Semester = {}));
-var GradeValue;
-(function (GradeValue) {
-    GradeValue[GradeValue["Excellent"] = 5] = "Excellent";
-    GradeValue[GradeValue["Good"] = 4] = "Good";
-    GradeValue[GradeValue["Satisfactory"] = 3] = "Satisfactory";
-    GradeValue[GradeValue["Unsatisfactory"] = 2] = "Unsatisfactory";
-})(GradeValue || (GradeValue = {}));
+var Grade;
+(function (Grade) {
+    Grade[Grade["Excellent"] = 5] = "Excellent";
+    Grade[Grade["Good"] = 4] = "Good";
+    Grade[Grade["Satisfactory"] = 3] = "Satisfactory";
+    Grade[Grade["Unsatisfactory"] = 2] = "Unsatisfactory";
+})(Grade || (Grade = {}));
 var Faculty;
 (function (Faculty) {
     Faculty["Computer_Science"] = "Computer_Science";
@@ -32,116 +32,143 @@ var Faculty;
     Faculty["Law"] = "Law";
     Faculty["Engineering"] = "Engineering";
 })(Faculty || (Faculty = {}));
-// University Management System Class
+// Клас для керування університетом
 class UniversityManagementSystem {
     constructor() {
         this.students = [];
         this.courses = [];
         this.grades = [];
-        this.currentStudentId = 1;
-        this.currentCourseId = 1;
     }
-    // Enroll a new student
+    // Додавання нового студента
     enrollStudent(student) {
-        const newStudent = Object.assign({ id: this.currentStudentId++ }, student);
+        const newStudent = Object.assign(Object.assign({}, student), { id: this.students.length + 1, enrollmentDate: new Date() });
         this.students.push(newStudent);
         return newStudent;
     }
-    // Register a student for a course
+    // Реєстрація студента на курс
     registerForCourse(studentId, courseId) {
         const student = this.students.find(s => s.id === studentId);
         const course = this.courses.find(c => c.id === courseId);
-        if (!student)
-            throw new Error("Student not found");
-        if (!course)
-            throw new Error("Course not found");
-        if (student.faculty !== course.faculty) {
-            throw new Error("Student cannot register for a course from a different faculty");
+        if (student && course && course.faculty === student.faculty && course.maxStudents > 0) {
+            alert(`Student ${student.fullName} successfully registered for course ${course.name}`);
+            course.maxStudents--;
         }
-        const courseRegistrations = this.grades.filter(g => g.courseId === courseId);
-        if (courseRegistrations.length >= course.maxStudents) {
-            throw new Error("Course is full");
+        else {
+            alert('Registration failed. Ensure student and course are valid.');
         }
-        this.grades.push({
-            studentId,
-            courseId,
-            grade: GradeValue.Unsatisfactory, // Default grade
-            date: new Date(),
-            semester: course.semester,
-        });
     }
-    // Set grade for a student in a course
+    // Виставлення оцінки студенту
     setGrade(studentId, courseId, grade) {
-        const gradeEntry = this.grades.find(g => g.studentId === studentId && g.courseId === courseId);
-        if (!gradeEntry)
-            throw new Error("Student is not registered for this course");
-        gradeEntry.grade = grade;
+        const student = this.students.find(s => s.id === studentId);
+        const course = this.courses.find(c => c.id === courseId);
+        if (student && course) {
+            const gradeRecord = {
+                studentId: student.id,
+                courseId: course.id,
+                grade: grade,
+                date: new Date(),
+                semester: course.semester
+            };
+            this.grades.push(gradeRecord);
+            alert(`Grade set for student ${student.fullName} in course ${course.name}`);
+        }
+        else {
+            alert('Student or course not found!');
+        }
     }
-    // Update student status
+    // Оновлення статусу студента
     updateStudentStatus(studentId, newStatus) {
         const student = this.students.find(s => s.id === studentId);
-        if (!student)
-            throw new Error("Student not found");
-        if (newStatus === StudentStatus.Graduated && student.status !== StudentStatus.Active) {
-            throw new Error("Only active students can graduate");
+        if (student) {
+            if (newStatus === StudentStatus.Graduated && student.status !== StudentStatus.Active) {
+                alert('Can only graduate an active student!');
+                return;
+            }
+            student.status = newStatus;
+            alert(`Student ${student.fullName} status updated to ${newStatus}`);
         }
-        student.status = newStatus;
+        else {
+            alert('Student not found!');
+        }
     }
-    // Get students by faculty
+    // Отримання студентів за факультетом
     getStudentsByFaculty(faculty) {
-        return this.students.filter(student => student.faculty === faculty);
+        return this.students.filter(s => s.faculty === faculty);
     }
-    // Get grades of a student
+    // Отримання оцінок студента
     getStudentGrades(studentId) {
-        return this.grades.filter(grade => grade.studentId === studentId);
+        return this.grades.filter(g => g.studentId === studentId);
     }
-    // Get available courses by faculty and semester
+    // Отримання доступних курсів за факультетом та семестром
     getAvailableCourses(faculty, semester) {
-        return this.courses.filter(course => course.faculty === faculty && course.semester === semester);
+        return this.courses.filter(c => c.faculty === faculty && c.semester === semester);
     }
-    // Calculate average grade of a student
+    // Розрахунок середнього балу студента
     calculateAverageGrade(studentId) {
         const studentGrades = this.getStudentGrades(studentId);
         if (studentGrades.length === 0)
             return 0;
-        const total = studentGrades.reduce((sum, g) => sum + g.grade, 0);
-        return total / studentGrades.length;
+        const totalGrade = studentGrades.reduce((sum, record) => sum + record.grade, 0);
+        return totalGrade / studentGrades.length;
     }
-    // Get a list of top-performing students by faculty
-    getTopStudentsByFaculty(faculty) {
-        return this.students
-            .filter(student => student.faculty === faculty)
-            .filter(student => {
-            const avgGrade = this.calculateAverageGrade(student.id);
-            return avgGrade >= GradeValue.Excellent;
-        });
-    }
-    // Add course (for simplicity)
+    // Додавання нового курсу
     addCourse(course) {
-        const newCourse = Object.assign({ id: this.currentCourseId++ }, course);
+        const newCourse = Object.assign(Object.assign({}, course), { id: this.courses.length + 1, maxStudents: 30 });
         this.courses.push(newCourse);
         return newCourse;
     }
+    // Отримання відмінників по факультету
+    getHonorStudentsByFaculty(faculty) {
+        return this.getStudentsByFaculty(faculty).filter(student => {
+            const avgGrade = this.calculateAverageGrade(student.id);
+            return avgGrade >= 4.5; // Визначаємо відмінників
+        });
+    }
 }
-// Example usage:
-const ums = new UniversityManagementSystem();
-const student = ums.enrollStudent({
+// Тестування функціоналу
+const universitySystem = new UniversityManagementSystem();
+// Додавання студентів
+const student1 = universitySystem.enrollStudent({
     fullName: "John Doe",
     faculty: Faculty.Computer_Science,
     year: 1,
     status: StudentStatus.Active,
-    enrollmentDate: new Date(),
-    groupNumber: "CS-101",
+    groupNumber: "CS101",
+    enrollmentDate: new Date() // Додаємо дату реєстрації
 });
-const course = ums.addCourse({
-    name: "Introduction to Programming",
+const student2 = universitySystem.enrollStudent({
+    fullName: "Jane Smith",
+    faculty: Faculty.Economics,
+    year: 2,
+    status: StudentStatus.Active,
+    groupNumber: "ECO201",
+    enrollmentDate: new Date() // Додаємо дату реєстрації
+});
+// Додавання курсів
+const course1 = universitySystem.addCourse({
+    name: "Intro to Programming",
     type: CourseType.Mandatory,
     credits: 5,
     semester: Semester.First,
     faculty: Faculty.Computer_Science,
-    maxStudents: 30,
+    maxStudents: 30
 });
-ums.registerForCourse(student.id, course.id);
-ums.setGrade(student.id, course.id, GradeValue.Excellent);
-console.log("Average Grade:", ums.calculateAverageGrade(student.id));
-console.log("Top Students:", ums.getTopStudentsByFaculty(Faculty.Computer_Science));
+const course2 = universitySystem.addCourse({
+    name: "Microeconomics",
+    type: CourseType.Mandatory,
+    credits: 4,
+    semester: Semester.First,
+    faculty: Faculty.Economics,
+    maxStudents: 30
+});
+// Реєстрація студентів на курси
+universitySystem.registerForCourse(student1.id, course1.id);
+universitySystem.registerForCourse(student2.id, course2.id);
+// Виставлення оцінок
+universitySystem.setGrade(student1.id, course1.id, Grade.Excellent);
+universitySystem.setGrade(student2.id, course2.id, Grade.Good);
+// Оновлення статусу студента
+universitySystem.updateStudentStatus(student1.id, StudentStatus.Graduated);
+// Перевірка відмінників
+const honorStudents = universitySystem.getHonorStudentsByFaculty(Faculty.Computer_Science);
+console.log(honorStudents);
