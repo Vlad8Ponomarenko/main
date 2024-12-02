@@ -1,6 +1,60 @@
 document.addEventListener("DOMContentLoaded", () => {
     const ums = new UniversityManagementSystem();
 
+    const updateStudentTable = () => {
+        const studentTable = document.getElementById("studentsTableBody") as HTMLTableSectionElement;
+        studentTable.innerHTML = ""; // Clear table
+
+        ums.getStudentsByFaculty(Faculty.Computer_Science).forEach(student => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${student.id}</td>
+                <td>${student.fullName}</td>
+                <td>${student.faculty}</td>
+                <td>${student.year}</td>
+                <td>${student.status}</td>
+                <td>${student.groupNumber}</td>
+            `;
+            studentTable.appendChild(row);
+        });
+    };
+
+    const updateCourseTable = () => {
+        const courseTable = document.getElementById("coursesTableBody") as HTMLTableSectionElement;
+        courseTable.innerHTML = ""; // Clear table
+
+        ums.getAvailableCourses(Faculty.Computer_Science, Semester.First).forEach(course => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${course.id}</td>
+                <td>${course.name}</td>
+                <td>${course.type}</td>
+                <td>${course.credits}</td>
+                <td>${course.semester}</td>
+                <td>${course.faculty}</td>
+                <td>${course.maxStudents}</td>
+            `;
+            courseTable.appendChild(row);
+        });
+    };
+
+    const updateGradesTable = () => {
+        const gradesTable = document.getElementById("gradesTableBody") as HTMLTableSectionElement;
+        gradesTable.innerHTML = ""; // Clear table
+
+        ums.getStudentGrades(1).forEach(grade => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${grade.studentId}</td>
+                <td>${grade.courseId}</td>
+                <td>${grade.grade}</td>
+                <td>${grade.date.toDateString()}</td>
+                <td>${grade.semester}</td>
+            `;
+            gradesTable.appendChild(row);
+        });
+    };
+
     // Handle Add Student Form
     document.getElementById("addStudentForm")?.addEventListener("submit", (e: Event) => {
         e.preventDefault();
@@ -19,6 +73,8 @@ document.addEventListener("DOMContentLoaded", () => {
             enrollmentDate: new Date(),
             groupNumber,
         });
+
+        updateStudentTable(); // Update table
         alert("Student added successfully!");
     });
 
@@ -34,6 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const maxStudents = parseInt((document.getElementById("maxStudents") as HTMLInputElement).value);
 
         ums.addCourse({ name, type, credits, semester, faculty, maxStudents });
+
+        updateCourseTable(); // Update table
         alert("Course added successfully!");
     });
 
@@ -47,12 +105,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             ums.setGrade(studentId, courseId, grade);
+
+            updateGradesTable(); // Update table
             alert("Grade added successfully!");
         } catch (error: any) {
             alert(error.message);
         }
     });
+
+    // Initial Table Update
+    updateStudentTable();
+    updateCourseTable();
+    updateGradesTable();
 });
+
 
 
 // Enums
