@@ -109,108 +109,116 @@
         <button onclick="displayCourses()">View Courses</button>
         <button onclick="displayGrades()">View Grades</button>
 
-        <h2>Add New Student</h2>
-        <form id="addStudentForm">
-            <input type="text" id="fullName" placeholder="Full Name" required>
-            <select id="faculty">
-                <option value="Computer_Science">Computer Science</option>
-                <option value="Economics">Economics</option>
-                <option value="Law">Law</option>
-                <option value="Engineering">Engineering</option>
-            </select>
-            <input type="number" id="year" placeholder="Year" min="1" max="4" required>
-            <select id="status">
-                <option value="Active">Active</option>
-                <option value="Academic_Leave">Academic Leave</option>
-                <option value="Graduated">Graduated</option>
-                <option value="Expelled">Expelled</option>
-            </select>
-            <input type="text" id="groupNumber" placeholder="Group Number" required>
-            <button type="submit">Add Student</button>
-        </form>
-    
-        <h2>Add New Course</h2>
-        <form id="addCourseForm">
-            <input type="text" id="courseName" placeholder="Course Name" required>
-            <select id="courseType">
-                <option value="Mandatory">Mandatory</option>
-                <option value="Optional">Optional</option>
-                <option value="Special">Special</option>
-            </select>
-            <input type="number" id="credits" placeholder="Credits" required>
-            <select id="semester">
-                <option value="First">First</option>
-                <option value="Second">Second</option>
-            </select>
-            <select id="courseFaculty">
-                <option value="Computer_Science">Computer Science</option>
-                <option value="Economics">Economics</option>
-                <option value="Law">Law</option>
-                <option value="Engineering">Engineering</option>
-            </select>
-            <input type="number" id="maxStudents" placeholder="Max Students" required>
-            <button type="submit">Add Course</button>
-        </form>
-    
-        <h2>Add Grade</h2>
-        <form id="addGradeForm">
-            <input type="number" id="studentId" placeholder="Student ID" required>
-            <input type="number" id="courseId" placeholder="Course ID" required>
-            <select id="grade">
-                <option value="5">Excellent</option>
-                <option value="4">Good</option>
-                <option value="3">Satisfactory</option>
-                <option value="2">Unsatisfactory</option>
-            </select>
-            <button type="submit">Add Grade</button>
-        </form>
+         <!-- Add Student Form -->
+    <h2>Add Student</h2>
+    <form id="addStudentForm">
+        <input id="fullName" type="text" placeholder="Full Name" required />
+        <select id="faculty">
+            <option value="Computer Science">Computer Science</option>
+            <option value="Economics">Economics</option>
+            <option value="Law">Law</option>
+            <option value="Engineering">Engineering</option>
+        </select>
+        <input id="year" type="number" placeholder="Year" required />
+        <select id="status">
+            <option value="Active">Active</option>
+            <option value="Academic_Leave">Academic Leave</option>
+            <option value="Graduated">Graduated</option>
+            <option value="Expelled">Expelled</option>
+        </select>
+        <input id="groupNumber" type="text" placeholder="Group Number" required />
+        <button type="submit">Add Student</button>
+    </form>
+
+    <!-- Add Course Form -->
+    <h2>Add Course</h2>
+    <form id="addCourseForm">
+        <input id="courseName" type="text" placeholder="Course Name" required />
+        <select id="courseType">
+            <option value="Lecture">Lecture</option>
+            <option value="Seminar">Seminar</option>
+            <option value="Workshop">Workshop</option>
+        </select>
+        <input id="credits" type="number" placeholder="Credits" required />
+        <select id="semester">
+            <option value="Fall">Fall</option>
+            <option value="Spring">Spring</option>
+            <option value="Summer">Summer</option>
+        </select>
+        <select id="courseFaculty">
+            <option value="Computer Science">Computer Science</option>
+            <option value="Economics">Economics</option>
+            <option value="Law">Law</option>
+            <option value="Engineering">Engineering</option>
+        </select>
+        <input id="maxStudents" type="number" placeholder="Max Students" required />
+        <button type="submit">Add Course</button>
+    </form>
+
+    <!-- Add Grade Form -->
+    <h2>Add Grade</h2>
+    <form id="addGradeForm">
+        <input id="studentId" type="number" placeholder="Student ID" required />
+        <input id="courseId" type="number" placeholder="Course ID" required />
+        <select id="grade">
+            <option value="5">Excellent</option>
+            <option value="4">Good</option>
+            <option value="3">Satisfactory</option>
+            <option value="2">Unsatisfactory</option>
+        </select>
+        <button type="submit">Add Grade</button>
+    </form>
     </div>
 
     <!-- Таблиці для відображення даних -->
     <div id="dataTables">
-        <table id="studentsTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Full Name</th>
-                    <th>Faculty</th>
-                    <th>Year</th>
-                    <th>Status</th>
-                    <th>Group</th>
-                </tr>
-            </thead>
-            <tbody id="studentsTableBody"></tbody>
-        </table>
+         <!-- Students Table -->
+    <h2>Students</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Faculty</th>
+                <th>Year</th>
+                <th>Status</th>
+                <th>Group Number</th>
+            </tr>
+        </thead>
+        <tbody id="studentsTableBody"></tbody>
+    </table>
 
-        <table id="coursesTable">
-            <caption>Courses</caption>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Credits</th>
-                    <th>Semester</th>
-                    <th>Faculty</th>
-                    <th>Max Students</th>
-                </tr>
-            </thead>
-            <tbody id="coursesTable"></tbody>
-        </table>
+    <!-- Courses Table -->
+    <h2>Courses</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Credits</th>
+                <th>Semester</th>
+                <th>Faculty</th>
+                <th>Max Students</th>
+            </tr>
+        </thead>
+        <tbody id="coursesTableBody"></tbody>
+    </table>
 
-        <table id="gradesTable">
-            <caption>Grades</caption>
-            <thead>
-                <tr>
-                    <th>Student ID</th>
-                    <th>Course ID</th>
-                    <th>Grade</th>
-                    <th>Date</th>
-                    <th>Semester</th>
-                </tr>
-            </thead>
-            <tbody id="gradesTableBody"></tbody>
-        </table>
+    <!-- Grades Table -->
+    <h2>Grades</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Course ID</th>
+                <th>Grade</th>
+                <th>Date</th>
+                <th>Semester</th>
+            </tr>
+        </thead>
+        <tbody id="gradesTableBody"></tbody>
+    </table>
     </div>
 
     <!-- Section for Checking Course Registration Eligibility -->
