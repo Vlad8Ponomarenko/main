@@ -1,3 +1,60 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const ums = new UniversityManagementSystem();
+
+    // Handle Add Student Form
+    document.getElementById("addStudentForm")?.addEventListener("submit", (e: Event) => {
+        e.preventDefault();
+
+        const fullName = (document.getElementById("fullName") as HTMLInputElement).value;
+        const faculty = (document.getElementById("faculty") as HTMLSelectElement).value as Faculty;
+        const year = parseInt((document.getElementById("year") as HTMLInputElement).value);
+        const status = (document.getElementById("status") as HTMLSelectElement).value as StudentStatus;
+        const groupNumber = (document.getElementById("groupNumber") as HTMLInputElement).value;
+
+        ums.enrollStudent({
+            fullName,
+            faculty,
+            year,
+            status,
+            enrollmentDate: new Date(),
+            groupNumber,
+        });
+        alert("Student added successfully!");
+    });
+
+    // Handle Add Course Form
+    document.getElementById("addCourseForm")?.addEventListener("submit", (e: Event) => {
+        e.preventDefault();
+
+        const name = (document.getElementById("courseName") as HTMLInputElement).value;
+        const type = (document.getElementById("courseType") as HTMLSelectElement).value as CourseType;
+        const credits = parseInt((document.getElementById("credits") as HTMLInputElement).value);
+        const semester = (document.getElementById("semester") as HTMLSelectElement).value as Semester;
+        const faculty = (document.getElementById("courseFaculty") as HTMLSelectElement).value as Faculty;
+        const maxStudents = parseInt((document.getElementById("maxStudents") as HTMLInputElement).value);
+
+        ums.addCourse({ name, type, credits, semester, faculty, maxStudents });
+        alert("Course added successfully!");
+    });
+
+    // Handle Add Grade Form
+    document.getElementById("addGradeForm")?.addEventListener("submit", (e: Event) => {
+        e.preventDefault();
+
+        const studentId = parseInt((document.getElementById("studentId") as HTMLInputElement).value);
+        const courseId = parseInt((document.getElementById("courseId") as HTMLInputElement).value);
+        const grade = parseInt((document.getElementById("grade") as HTMLSelectElement).value) as GradeValue;
+
+        try {
+            ums.setGrade(studentId, courseId, grade);
+            alert("Grade added successfully!");
+        } catch (error: any) {
+            alert(error.message);
+        }
+    });
+});
+
+
 // Enums
 enum StudentStatus {
     Active = "Active",

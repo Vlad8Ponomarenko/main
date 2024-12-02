@@ -93,6 +93,62 @@
         <button onclick="displayStudents()">View Students</button>
         <button onclick="displayCourses()">View Courses</button>
         <button onclick="displayGrades()">View Grades</button>
+
+        <h2>Add New Student</h2>
+        <form id="addStudentForm">
+            <input type="text" id="fullName" placeholder="Full Name" required>
+            <select id="faculty">
+                <option value="Computer_Science">Computer Science</option>
+                <option value="Economics">Economics</option>
+                <option value="Law">Law</option>
+                <option value="Engineering">Engineering</option>
+            </select>
+            <input type="number" id="year" placeholder="Year" min="1" max="4" required>
+            <select id="status">
+                <option value="Active">Active</option>
+                <option value="Academic_Leave">Academic Leave</option>
+                <option value="Graduated">Graduated</option>
+                <option value="Expelled">Expelled</option>
+            </select>
+            <input type="text" id="groupNumber" placeholder="Group Number" required>
+            <button type="submit">Add Student</button>
+        </form>
+    
+        <h2>Add New Course</h2>
+        <form id="addCourseForm">
+            <input type="text" id="courseName" placeholder="Course Name" required>
+            <select id="courseType">
+                <option value="Mandatory">Mandatory</option>
+                <option value="Optional">Optional</option>
+                <option value="Special">Special</option>
+            </select>
+            <input type="number" id="credits" placeholder="Credits" required>
+            <select id="semester">
+                <option value="First">First</option>
+                <option value="Second">Second</option>
+            </select>
+            <select id="courseFaculty">
+                <option value="Computer_Science">Computer Science</option>
+                <option value="Economics">Economics</option>
+                <option value="Law">Law</option>
+                <option value="Engineering">Engineering</option>
+            </select>
+            <input type="number" id="maxStudents" placeholder="Max Students" required>
+            <button type="submit">Add Course</button>
+        </form>
+    
+        <h2>Add Grade</h2>
+        <form id="addGradeForm">
+            <input type="number" id="studentId" placeholder="Student ID" required>
+            <input type="number" id="courseId" placeholder="Course ID" required>
+            <select id="grade">
+                <option value="5">Excellent</option>
+                <option value="4">Good</option>
+                <option value="3">Satisfactory</option>
+                <option value="2">Unsatisfactory</option>
+            </select>
+            <button type="submit">Add Grade</button>
+        </form>
     </div>
 
     <!-- Таблиці для відображення даних -->
@@ -140,7 +196,7 @@
     </div>
 
     <!-- Підключення JavaScript -->
-    <script>
+    <script src="dist/system.js">
         // Функції для відображення даних
         function displayStudents() {
             document.getElementById('coursesTable').style.display = 'none';
