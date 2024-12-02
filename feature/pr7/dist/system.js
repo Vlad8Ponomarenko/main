@@ -325,3 +325,27 @@ const grades = [
         });
     }
 });
+document.addEventListener("DOMContentLoaded", () => {
+    var _a, _b, _c;
+    // Scroll to Students Table
+    (_a = document.getElementById("viewStudentsButton")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
+        const studentsTable = document.getElementById("studentsTable");
+        if (studentsTable) {
+            studentsTable.scrollIntoView({ behavior: "smooth" });
+        }
+    });
+    // Scroll to Courses Table
+    (_b = document.getElementById("viewCoursesButton")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", () => {
+        const coursesTable = document.getElementById("coursesTable");
+        if (coursesTable) {
+            coursesTable.scrollIntoView({ behavior: "smooth" });
+        }
+    });
+    // Scroll to Grades Table
+    (_c = document.getElementById("viewGradesButton")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", () => {
+        const gradesTable = document.getElementById("gradesTable");
+        if (gradesTable) {
+            gradesTable.scrollIntoView({ behavior: "smooth" });
+        }
+    });
+});
