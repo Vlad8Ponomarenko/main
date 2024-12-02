@@ -84,6 +84,21 @@
                 width: 100%;
             }
         }
+
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    }
+    th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    }
+    th {
+    background-color: #f2f2f2;
+    }
+
     </style>
 </head>
 <body>
@@ -153,8 +168,7 @@
 
     <!-- Таблиці для відображення даних -->
     <div id="dataTables">
-        <table id="studentsTableBody">
-            <caption>Students</caption>
+        <table id="studentsTable">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -162,13 +176,13 @@
                     <th>Faculty</th>
                     <th>Year</th>
                     <th>Status</th>
-                    <th>Group Number</th>
+                    <th>Group</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody id="studentsTableBody"></tbody>
         </table>
 
-        <table id="coursesTableBody">
+        <table id="coursesTable">
             <caption>Courses</caption>
             <thead>
                 <tr>
@@ -181,10 +195,10 @@
                     <th>Max Students</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody id="coursesTable"></tbody>
         </table>
 
-        <table id="gradesTableBody">
+        <table id="gradesTable">
             <caption>Grades</caption>
             <thead>
                 <tr>
@@ -195,7 +209,7 @@
                     <th>Semester</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody id="gradesTableBody"></tbody>
         </table>
     </div>
 
