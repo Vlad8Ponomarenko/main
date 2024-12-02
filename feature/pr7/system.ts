@@ -396,3 +396,29 @@ document.getElementById("getTopStudentsButton")?.addEventListener("click", () =>
         });
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Scroll to Students Table
+    document.getElementById("viewStudentsButton")?.addEventListener("click", () => {
+        const studentsTable = document.getElementById("studentsTable");
+        if (studentsTable) {
+            studentsTable.scrollIntoView({ behavior: "smooth" });
+        }
+    });
+
+    // Scroll to Courses Table
+    document.getElementById("viewCoursesButton")?.addEventListener("click", () => {
+        const coursesTable = document.getElementById("coursesTable");
+        if (coursesTable) {
+            coursesTable.scrollIntoView({ behavior: "smooth" });
+        }
+    });
+
+    // Scroll to Grades Table
+    document.getElementById("viewGradesButton")?.addEventListener("click", () => {
+        const gradesTable = document.getElementById("gradesTable");
+        if (gradesTable) {
+            gradesTable.scrollIntoView({ behavior: "smooth" });
+        }
+    });
+});
