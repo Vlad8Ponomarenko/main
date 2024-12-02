@@ -213,6 +213,47 @@
         </table>
     </div>
 
+    <!-- Section for Checking Course Registration Eligibility -->
+    <h2>Check Course Registration Eligibility</h2>
+    <form id="checkRegistrationForm">
+        <label for="checkStudentId">Student ID:</label>
+        <input type="number" id="checkStudentId" required>
+
+        <label for="checkCourseId">Course ID:</label>
+        <input type="number" id="checkCourseId" required>
+
+        <button type="button" id="checkRegistrationButton">Check Eligibility</button>
+    </form>
+    <p id="registrationCheckResult"></p>
+
+    <!-- Section for Checking Grade Eligibility -->
+    <h2>Check Grade Assignment Eligibility</h2>
+    <form id="checkGradeForm">
+        <label for="gradeStudentId">Student ID:</label>
+        <input type="number" id="gradeStudentId" required>
+
+        <label for="gradeCourseId">Course ID:</label>
+        <input type="number" id="gradeCourseId" required>
+
+        <button type="button" id="checkGradeButton">Check Eligibility</button>
+    </form>
+    <p id="gradeCheckResult"></p>
+
+    <!-- Section for Retrieving Top Students -->
+    <h2>Get Top Students by Faculty</h2>
+    <form id="getTopStudentsForm">
+        <label for="topStudentsFaculty">Faculty:</label>
+        <select id="topStudentsFaculty" required>
+            <option value="Computer_Science">Computer Science</option>
+            <option value="Economics">Economics</option>
+            <option value="Law">Law</option>
+            <option value="Engineering">Engineering</option>
+        </select>
+
+        <button type="button" id="getTopStudentsButton">Get Top Students</button>
+    </form>
+    <ul id="topStudentsList"></ul>
+
     <!-- Підключення JavaScript -->
     <script src="dist/system.js">
         // Функції для відображення даних

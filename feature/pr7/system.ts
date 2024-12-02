@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const studentTable = document.getElementById("studentsTableBody") as HTMLTableSectionElement;
         studentTable.innerHTML = ""; // Clear table
 
-        ums.getStudentsByFaculty(Faculty.Computer_Science).forEach(student => {
+        ums.getStudentsByFaculty(Faculty.ComputerScience).forEach(student => {
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td>${student.id}</td>
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const courseTable = document.getElementById("coursesTableBody") as HTMLTableSectionElement;
         courseTable.innerHTML = ""; // Clear table
 
-        ums.getAvailableCourses(Faculty.Computer_Science, Semester.First).forEach(course => {
+        ums.getAvailableCourses(Faculty.ComputerScience, Semester.Fall).forEach(course => {
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td>${course.id}</td>
@@ -113,6 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+
     // Initial Table Update
     updateStudentTable();
     updateCourseTable();
@@ -130,14 +131,15 @@ enum StudentStatus {
 }
 
 enum CourseType {
-    Mandatory = "Mandatory",
-    Optional = "Optional",
-    Special = "Special",
+    Lecture = "Lecture",
+    Seminar = "Seminar",
+    Workshop = "Workshop",
 }
 
 enum Semester {
-    First = "First",
-    Second = "Second",
+    Fall = "Fall",
+    Spring = "Spring",
+    Summer = "Summer",
 }
 
 enum GradeValue {
@@ -148,7 +150,7 @@ enum GradeValue {
 }
 
 enum Faculty {
-    Computer_Science = "Computer_Science",
+    ComputerScience = "Computer Science",
     Economics = "Economics",
     Law = "Law",
     Engineering = "Engineering",
@@ -285,26 +287,112 @@ class UniversityManagementSystem {
 
 // Example usage:
 const ums = new UniversityManagementSystem();
-const student = ums.enrollStudent({
-    fullName: "John Doe",
-    faculty: Faculty.Computer_Science,
-    year: 1,
-    status: StudentStatus.Active,
-    enrollmentDate: new Date(),
-    groupNumber: "CS-101",
+const students: Student[] = [
+    {
+        id: 1,
+        fullName: "John Doe",
+        faculty: Faculty.ComputerScience,
+        year: 2,
+        status: StudentStatus.Active,
+        enrollmentDate: new Date("2022-09-01"),
+        groupNumber: "CS202",
+    },
+    {
+        id: 2,
+        fullName: "Jane Smith",
+        faculty: Faculty.Economics,
+        year: 3,
+        status: StudentStatus.Active,
+        enrollmentDate: new Date("2021-09-01"),
+        groupNumber: "ECO301",
+    },
+];
+
+const courses: Course[] = [
+    {
+        id: 101,
+        name: "Algorithms",
+        type: CourseType.Lecture,
+        credits: 4,
+        semester: Semester.Fall,
+        faculty: Faculty.ComputerScience,
+        maxStudents: 30,
+    },
+    {
+        id: 102,
+        name: "Macroeconomics",
+        type: CourseType.Seminar,
+        credits: 3,
+        semester: Semester.Spring,
+        faculty: Faculty.Economics,
+        maxStudents: 25,
+    },
+];
+
+const grades: Grade[] = [
+    { studentId: 1, courseId: 101, grade: GradeValue.Excellent, date: new Date("2023-10-10"), semester: Semester.Fall },
+    { studentId: 2, courseId: 102, grade: GradeValue.Good, date: new Date("2023-10-15"), semester: Semester.Spring },
+];
+
+// Функціональність
+
+// Перевірка можливості реєстрації на курс
+document.getElementById("checkRegistrationButton")?.addEventListener("click", () => {
+    const studentId = parseInt((document.getElementById("checkStudentId") as HTMLInputElement).value);
+    const courseId = parseInt((document.getElementById("checkCourseId") as HTMLInputElement).value);
+
+    const course = courses.find((c) => c.id === courseId);
+    const student = students.find((s) => s.id === studentId);
+
+    let result = "Invalid input.";
+    if (course && student) {
+        if (
+            student.faculty === course.faculty &&
+            course.maxStudents > grades.filter((g) => g.courseId === courseId).length
+        ) {
+            result = "Student is eligible to register for this course.";
+        } else {
+            result = "Student cannot register for this course.";
+        }
+    }
+    const resultElement = document.getElementById("registrationCheckResult");
+    if (resultElement) {
+        resultElement.textContent = result;
+    }
 });
 
-const course = ums.addCourse({
-    name: "Introduction to Programming",
-    type: CourseType.Mandatory,
-    credits: 5,
-    semester: Semester.First,
-    faculty: Faculty.Computer_Science,
-    maxStudents: 30,
+// Перевірка можливості виставлення оцінки
+document.getElementById("checkGradeButton")?.addEventListener("click", () => {
+    const studentId = parseInt((document.getElementById("gradeStudentId") as HTMLInputElement).value);
+    const courseId = parseInt((document.getElementById("gradeCourseId") as HTMLInputElement).value);
+
+    const gradeEligible = grades.some((g) => g.studentId === studentId && g.courseId === courseId);
+    const resultElement = document.getElementById("gradeCheckResult");
+    if (resultElement) {
+        resultElement.textContent = gradeEligible
+            ? "Student is registered for this course."
+            : "Student is not registered for this course.";
+    }
 });
 
-ums.registerForCourse(student.id, course.id);
-ums.setGrade(student.id, course.id, GradeValue.Excellent);
+// Отримання списку відмінників
+document.getElementById("getTopStudentsButton")?.addEventListener("click", () => {
+    const faculty = (document.getElementById("topStudentsFaculty") as HTMLSelectElement).value as Faculty;
+    const topStudents = students.filter(
+        (s) =>
+            s.faculty === faculty &&
+            grades
+                .filter((g) => g.studentId === s.id)
+                .every((g) => g.grade === GradeValue.Excellent)
+    );
 
-console.log("Average Grade:", ums.calculateAverageGrade(student.id));
-console.log("Top Students:", ums.getTopStudentsByFaculty(Faculty.Computer_Science));
+    const topStudentsList = document.getElementById("topStudentsList");
+    if (topStudentsList) {
+        topStudentsList.innerHTML = "";
+        topStudents.forEach((s) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `${s.id}: ${s.fullName} (Group: ${s.groupNumber})`;
+            topStudentsList.appendChild(listItem);
+        });
+    }
+});
