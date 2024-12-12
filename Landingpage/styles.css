@@ -1,9 +1,11 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
-  }
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  background-image: url('https://images.unsplash.com/photo-1519671482749-fd09be7ccebf');
+  background-size: cover;
+  background-attachment: fixed;
+  color: #fff;
+}
   
   .container {
     width: 90%;
@@ -12,8 +14,7 @@ body {
   }
   
   .header {
-    background: #333;
-    color: #fff;
+    background: rgba(0, 0, 0, 0.8);
     padding: 1em 0;
   }
   
@@ -28,10 +29,9 @@ body {
   }
   
   .hero {
-    background: url('hero-bg.jpg') no-repeat center center/cover;
-    color: #fff;
     text-align: center;
-    padding: 5em 0;
+    padding: 3em 1em;
+    background: rgba(0, 0, 0, 0.6);
   }
   
   .hero .btn {
@@ -50,12 +50,17 @@ body {
   .book-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2em;
+    gap: 1.5em;
   }
   
   .book img {
     max-width: 100%;
-    border-radius: 5px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .book h3 {
+    margin-top: 0.5em;
   }
   
   .book button {
@@ -74,9 +79,9 @@ body {
   }
   
   .promotion {
-    background: #f9f9f9;
-    padding: 3em 0;
-    text-align: center;
+    background: rgba(255, 255, 255, 0.8);
+    color: #000;
+    padding: 2em 0;
   }
   
   .promo-banner {
